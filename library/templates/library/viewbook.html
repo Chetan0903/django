@@ -1,0 +1,78 @@
+{%  extends 'library/main.html' %}
+
+{% block content %}
+
+		
+<h3 class="p-3 mb-2 bg-primary text-white" style = 'font-size: 50px;text-align:center;'></h3>
+<div class="row">
+	<div class="col-md">	
+
+<br>
+
+
+
+		    <h3>Search Books:</h3>
+		  
+	
+<br>
+
+
+<div class="row">
+	<div class="col">
+		<div class="card card-body">
+			<form method="get">
+				
+				
+				{{myFilter.form}}
+
+
+		    <button class="btn btn-primary" type="submit">Search</button>
+		  </form>
+		</div>
+	</div>
+	
+</div>
+<br>
+
+
+
+		    <h3>Available Books:</h3>
+		  
+	
+<br>
+
+
+
+<div class="row">
+	<div class="col-md">
+		<div class="card card-body">
+			<table class="table table-sm">
+				<tr>
+                    <th>Book Name</th>
+                    <th>ISBN</th>
+                    <th>Author</th>
+					<th>Category</th>
+					<th>Status</th>
+                    <th>Boook Details</th>
+
+				</tr>
+
+				  
+                {% for book in books %}
+                <tr>
+                  <td>{{book.title}}</td>
+                  <td>{{book.isbn}}</td>
+                  <td>{{book.author}}</td>
+				  <td>{{book.department}}</td>
+				  <td>{{book.status}}</td>
+                  <td><a class="btn btn-sm btn-info" href="{% url 'bookdetails' book.id %}">View</a></td>
+                </tr>
+              {% endfor %}
+            
+
+			</table>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

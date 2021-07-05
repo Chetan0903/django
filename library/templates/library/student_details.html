@@ -1,0 +1,91 @@
+{%  extends 'library/main.html' %}
+
+{% block content %}
+
+	<br>
+    <h3 class="p-3 mb-2 bg-primary text-white" style = 'font-size: 50px;text-align:center;'></h3>
+<div class="row">
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>Student:</h5>
+			<hr>
+			<a class="btn btn-outline-info  btn-sm btn-block" href="{% url 'updatestudent' student.id %}">Update Student</a>
+			<a class="btn btn-outline-info  btn-sm btn-block" href="{% url 'issuebook' student.id %}">Issue Book</a>
+			<a class="btn btn-outline-danger  btn-sm btn-block" href="{% url 'deletestudent' student.id %}">Delete Student</a>
+
+		</div>
+	</div>
+
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>Student Information</h5>
+            <hr>
+            <p>Name: {{student.name}} </p>
+            <p>PRN: {{student.prn_no}} </p>
+            <p>Branch: {{student.branch}} </p>
+			<p>Email: {{student.email}} </p>
+			<p>Phone: {{student.contact_no}} </p>
+		</div>
+	</div>
+
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>Total Books</h5>
+			<hr>
+			<h1 style="text-align: center;padding: 10px">{{book_count}}</h1>
+		</div>
+	</div>
+</div>
+
+
+<br>
+<div class="row">
+	<div class="col">
+		<div class="card card-body">
+			
+
+		    <h3>Issued Books:</h3>
+		  
+		</div>
+	</div>
+	
+</div>
+<br>
+
+<div class="row">
+	<div class="col-md">
+		<div class="card card-body">
+			<table class="table table-sm">
+				<tr>
+                    <th>Book</th>
+                    <th>ISBN</th>
+					<th>Department</th>
+					<th>Date Issued</th>
+					<th>Return Date</th>
+					<th>Fine</th>
+					<th>Remove</th>
+				</tr>
+
+				{% for t in li2 %}
+				 
+				<tr>
+					<td>{{t.0}}</td>
+					<td>{{t.1}}</td>
+					<td>{{t.2}}</td>
+                    <td>{{t.3}}</td>
+					<td>{{t.4}}</td>
+					<td>{{t.5}}</td>
+					<td><a class="btn btn-sm btn-danger" href="{% url 'returnbook' t.6 %}"> Return Book</a></td>
+					
+				</tr>
+
+				{% endfor %}
+				
+				 
+				
+			</table>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
