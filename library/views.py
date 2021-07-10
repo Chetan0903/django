@@ -1,3 +1,4 @@
+from django.db.models.query import QuerySet
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
 
@@ -15,7 +16,7 @@ from django.contrib.auth.models import Group
 # Create your views here.
 
 from .forms import *
-from .models import Book,Student,IssueBook
+from .models import Book,Student,IssueBook,BookCodes
 from . import models
 from .filters import StudentFilter,BookFilter
 from .decorators import unauthenticated_user,allowed_users,admin_only
@@ -120,6 +121,20 @@ def viewbook(request):
     #For search
     myFilter = BookFilter(request.GET,queryset=books)
     books = myFilter.qs
+    booksCountTotal=list()
+    booksCountAvl=list()
+    
+    for i in books:
+        booksCountTotal.append(BookCodes.objects.filter(book__title=i.title).count())
+        booksCountAvl.append(BookCodes.objects.filter(book__title=i.title).filter(status='Available').count())
+        #print(i,BookCodes.objects.filter(book__title=i.title).count())
+    
+    booksCount=zip(tuple(booksCountTotal),tuple(booksCountAvl))
+    #print(booksCount)
+    booksCount=tuple(booksCount)#zip of total books and available books
+
+    #print(booksCount)
+    books=zip(books,booksCount)
     
     context = {'books':books,'myFilter': myFilter}
     return render(request,'library/viewbook.html', context)
@@ -173,10 +188,18 @@ def studentDetails(request, pk_test):
 def bookDetails(request, pk_test):
 
     book = Book.objects.get(id=pk_test)
-   # book_issued = student.issuebook_set.all()
+    # book_issued = student.issuebook_set.all()
     #book_count = book_issued.count()
-
-    context ={'book':book}
+    totalBooks=book.bookcodes_set.all().count()
+    availableBooks=book.bookcodes_set.filter(status='Available')
+    availableBooksCount=availableBooks.count()
+    #print(totalBooks,availableBooks)
+    context ={
+        'book':book,
+        'totalBooks':totalBooks,
+        'availableBooks':availableBooks,
+        'availableBooksCount':availableBooksCount
+        }
     return render(request, 'library/book_details.html',context)
 
 
@@ -234,11 +257,16 @@ def bookReturn(request, pk):
     return render(request, 'library/returnbook.html', {'item': book,'book1': book1}) 
 
 
-#To add book
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
+def addBookOptionsPage(request):
+    return render(request,'library/addBookOptionsPage.html')
+
+
+#To add new book
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin'])
 def addBook(request):
-
     form = BookForm()
     if request.method == 'POST':
         form = BookForm(request.POST)
@@ -249,6 +277,19 @@ def addBook(request):
     context ={'form': form}
     return render(request, 'library/addbook_form.html', context)
 
+#To add new book
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
+def addNewCopy(request):
+    form = AddBookCopyForm()
+    if request.method == 'POST':
+        form = AddBookCopyForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+           # return render(request,'library/bookadded.html')
+    context ={'form': form}
+    return render(request, 'library/addbook_form.html', context)
 
 #To update book info
 @login_required(login_url='login')
@@ -274,17 +315,20 @@ def updateBook(request, pk):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin'])
 def deleteBook(request, pk):
-    
     book = Book.objects.get(id=pk)
     if request.method == 'POST':
         book.delete()
         return redirect('/')
-
     context ={'item': book}
-
     return render(request, 'library/deletebook.html', context)     
 
 
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
+def viewRequestedBook(request,pk_test):
+    print(request.POST,pk_test)
+    print("inside viewrequested book section")
+    return HttpResponse(f'<h1>inside view requested book view {pk_test}</h1>')
 
 
 #To add student

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book section</title>
+    <style>
+        .container{
+            display:flex;
+            flex-wrap:wrap;
+            align-items:center;
+            flex-direction: row;
+            justify-content:space-around;
+        }
+        .child{
+            width:30%;
+            padding:10px;
+            margin:10px;
+        }
+        @media only screen and (max-width: 600px) {
+            .child{
+                width:60%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div>
+        {% include "library/navbaradmin.html" %}
+    </div>
+    <br>
+    <br>
+    <div class="container">
+        <div class="child">
+            <div><a href="{% url 'addbook' %}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Add New Book To Library</a></div>
+            Use this option to add new book to library
+        </div>
+        <div class="child">
+            <div><a href="{% url 'addbookcopy' %}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Add New Copies of Book which are present in library</a></div>
+            Use this option to add new copies of books that are alredy in library
+        </div>
+    </div>
+</body>
+</html>
