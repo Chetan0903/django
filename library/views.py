@@ -80,15 +80,14 @@ def logoutUser(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['student'])
 def userPage(request):
-
-  #  student = request.user.student
+    print(request.user)
+    print(request.user.student)
     book_issued = request.user.student.issuebook_set.all()
     book_count = book_issued.count()
 
     li2=[]
     for ib in book_issued:
-        
-        books=models.Book.objects.filter(isbn=ib.book.isbn)
+        books=models.BookCodes.objects.filter(isbn=ib.book.isbn)
         
         days=(datetime.now(timezone.utc)-ib.issue_date)
         print(date.today())
@@ -158,15 +157,16 @@ def viewstudent(request):
 @login_required(login_url='login')
 #@allowed_users(allowed_roles=['admin'])
 def studentDetails(request, pk_test):
-
+    print("hello")
     student = Student.objects.get(id=pk_test)
     book_issued = student.issuebook_set.all()
+    print(student,book_issued)
     book_count = book_issued.count()   
 
     li2=[]
     for ib in book_issued:
         
-        books=models.Book.objects.filter(isbn=ib.book.isbn)
+        books=models.BookCodes.objects.filter(isbn=ib.book.isbn)
         
         days=(datetime.now(timezone.utc)-ib.issue_date)
        # print(date.today())
@@ -176,7 +176,7 @@ def studentDetails(request, pk_test):
             day=d-1
             fine=day*10
 
-        t = (ib.book.title,ib.book.isbn,ib.book.department,ib.issue_date,ib.return_date,fine,ib.id)
+        t = (ib.book.book.title,ib.book.isbn,ib.book.book.department,ib.issue_date,ib.return_date,fine,ib.id)
         li2.append(t)
         
     context ={'student':student,'book_issued': book_issued,'book_count':book_count,'li2':li2}
@@ -217,8 +217,9 @@ def bookIssue(request, pk):
         if form.is_valid():
             #field.book.status= 'Not Available'
             bk = form.cleaned_data['book']
-            ids = bk.id
-            book = Book.objects.get(id=ids)
+            id = bk.id
+            print(id,bk,type(id),type(bk))
+            book = BookCodes.objects.get(id=id)
             
             book.status = 'Not Available'
             book.save()
@@ -247,7 +248,7 @@ def bookReturn(request, pk):
 
     ids = book.book.id
    # print(ids)
-    book1 = Book.objects.get(id=ids)
+    book1 = BookCodes.objects.get(id=ids)
     book1.status = 'Available'
     book1.save()
             
@@ -295,7 +296,6 @@ def addNewCopy(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin'])
 def updateBook(request, pk):
-
     book = Book.objects.get(id=pk)
     form = BookForm(instance=book)    
     if request.method == 'POST':

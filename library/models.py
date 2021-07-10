@@ -71,7 +71,7 @@ class IssueBook(models.Model):
     return_date = models.DateTimeField(default=get_expiry)
 
     def __str__(self):
-        return self.student.name+" : "+self.book.title
+        return self.student.name+" -> "+self.book.book.title+", "+str(self.book.isbn)
 
 
 class RequestBook(models.Model):

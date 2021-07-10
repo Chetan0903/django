@@ -10,7 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 
 
-
+	{% load crispy_forms_tags %}
     <style type="text/css">
     	body {
     		color: #aa082e;
@@ -100,21 +100,9 @@
 <center><h3 style=" margin-bottom: 0px;"class = 'alert alert-success'>ADD STUDENT TO LIBRARY !</h3></center>
     <div class="signup-form">
         <form  method="post" class="form-horizontal">
-
-    			<center><h2> STUDENT DETAILS</h2></center>
-
-{% csrf_token %}
-
-            {% for field in form %}
-            <div class="form-group">
-              <label class="control-label col-xs-4">{{ field.label_tag }}</label>
-              <div class="col-xs-8">
-              {{ field }}
-               </div>
-            </div>
-            {% endfor %}
-
-
+			<center><h2> STUDENT DETAILS</h2></center>
+			{% csrf_token %}
+            {{form|crispy}}
     		<div class="form-group">
     			<div class="col-xs-8 col-xs-offset-4">
             <button type="submit" class="btn btn-primary btn-lg">ADD</button>
