@@ -1,69 +1,62 @@
-{%  extends 'library/main.html' %}
-
+{% extends 'library/main.html' %} 
 {% block content %}
+	{% load crispy_forms_tags %}
 
-	<br>
-
-
-	<h3 class="p-3 mb-2 bg-primary text-white" style = 'font-size: 50px;text-align:center;'></h3>
+	<br />
+	<h3 class="p-3 mb-2 bg-primary text-white" style="font-size: 50px; text-align: center"></h3>
 	<div class="row">
-		<div class="col-md">
-	
+	<div class="col-md">
+		<h3>Search:</h3>
+		<br />
 
-	
-		    <h3>Search:</h3>
-<br>
-
-<br>
-<div class="row">
-	<div class="col">
-		<div class="card card-body">
+		<br />
+		<div class="row">
+		<div class="col">
+			<div class="card card-body">
 			<form method="get">
-
 				{{myFilter.form}}
 
-		    <button class="btn btn-primary" type="submit">Search</button>
-		  </form>
+				<button class="btn btn-primary" type="submit">Search</button>
+			</form>
+			</div>
 		</div>
-	</div>
-	
-</div>
-<br>
+		</div>
+		<br />
 
-<h3>Students:</h3>
-		  
-	
-<br>
-<div class="row">
-	<div class="col-md">
-		<div class="card card-body">
+		<h3>Students:</h3>
+
+		<br />
+		<div class="row">
+		<div class="col-md">
+			<div class="card card-body">
 			<table class="table table-sm">
 				<tr>
-                    
-                    <th>Name</th>
-                    <th>PRN</th>
-                    <th>Branch</th>
-                    <th>View Student</th>
-            
+				<th>Name</th>
+				<th>PRN</th>
+				<th>Branch</th>
+				<th>View Student</th>
 				</tr>
 
-				  
-                {% for student in student %}
-            <tr>
-                      
-            <td>{{student.name}}</td>
-            <td>{{student.prn_no}}</td>
-            <td>{{student.branch}}</td>
-            <td><a class="btn btn-sm btn-info" href="{% url 'studentdetails' student.id %}">View</a></td>
+				{% for student in student %}
+				<tr>
+				<td>{{student.name}}</td>
+				<td>{{student.prn_no}}</td>
+				<td>{{student.branch}}</td>
+				<td>
+					<a
+					class="btn btn-sm btn-info"
+					href="{% url 'studentdetails' student.id %}"
+					>View</a
+					>
+				</td>
+				</tr>
 
-            </tr>
-
-        {% endfor %}
-            
-
+				{% endfor %}
 			</table>
+			</div>
 		</div>
-	</div>
-</div>
+		</div>
 
-{% endblock %}
+		{% endblock %}
+  </div>
+</div>
