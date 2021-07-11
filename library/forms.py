@@ -6,6 +6,9 @@ from .models import IssueBook,Book,Student,BookCodes
 
 
 class IssueForm(ModelForm):
+    def __init__(self,*args,**kwargs):
+        super (IssueForm,self ).__init__(*args,**kwargs)
+        self.fields['book'].queryset=BookCodes.objects.filter(status='Available')
     class Meta:
         model= IssueBook
         fields = '__all__'

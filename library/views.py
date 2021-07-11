@@ -80,8 +80,6 @@ def logoutUser(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['student'])
 def userPage(request):
-    print(request.user)
-    print(request.user.student)
     book_issued = request.user.student.issuebook_set.all()
     book_count = book_issued.count()
 
@@ -157,10 +155,8 @@ def viewstudent(request):
 @login_required(login_url='login')
 #@allowed_users(allowed_roles=['admin'])
 def studentDetails(request, pk_test):
-    print("hello")
     student = Student.objects.get(id=pk_test)
     book_issued = student.issuebook_set.all()
-    print(student,book_issued)
     book_count = book_issued.count()   
 
     li2=[]
@@ -218,7 +214,7 @@ def bookIssue(request, pk):
             #field.book.status= 'Not Available'
             bk = form.cleaned_data['book']
             id = bk.id
-            print(id,bk,type(id),type(bk))
+            #print(id,bk,type(id),type(bk))
             book = BookCodes.objects.get(id=id)
             
             book.status = 'Not Available'
@@ -227,6 +223,7 @@ def bookIssue(request, pk):
            # print(ids)
            # print(bk)
             form.save()
+            messages.success(request,f'book {book} issued successfully to {student}')
             return redirect('/')
 
     context ={'form': form}
@@ -238,24 +235,18 @@ def bookIssue(request, pk):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin'])
 def bookReturn(request, pk):
-    
-    book = IssueBook.objects.get(id=pk)
-   
+    #print("pk->", pk)
+    bookInIssueBook = IssueBook.objects.get(id=pk)
+    #print(bookInIssueBook,bookInIssueBook.book.isbn)
     if request.method == 'POST':
-        
-        book.delete()
+        bookInBookCodes=BookCodes.objects.get(isbn=bookInIssueBook.book.isbn)
+        #print(bookInBookCodes)
+        bookInIssueBook.delete()
+        bookInBookCodes.status="Available"
+        bookInBookCodes.save()
         return redirect('/')
 
-    ids = book.book.id
-   # print(ids)
-    book1 = BookCodes.objects.get(id=ids)
-    book1.status = 'Available'
-    book1.save()
-            
-
-   # context ={'item': book,'book1': book1}
-
-    return render(request, 'library/returnbook.html', {'item': book,'book1': book1}) 
+    return render(request, 'library/returnbook.html', {'item': bookInIssueBook}) 
 
 
 @login_required(login_url='login')

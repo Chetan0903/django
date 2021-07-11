@@ -14,7 +14,7 @@ class Book(models.Model):
         ('IT', 'IT'),
         ('other','other'),
         ]
-    title = models.CharField(max_length=30)
+    title = models.CharField(max_length=50)
     author = models.CharField(max_length=40)
     department = models.CharField(max_length=30,choices=deptchoice)
 

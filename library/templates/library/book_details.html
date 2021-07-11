@@ -17,10 +17,15 @@
       <hr>
       <div class="col-md mr-3">
         {% if availableBooks|length > 0 %}
-          Available ISBN's:
-          {% for isbn in availableBooks %}
-            <span><a href="#">{{isbn.isbn}}</a></span>
-          {% endfor %}
+          {% if request.user|isAdmin %}
+            Available ISBN's:
+            {% for isbn in availableBooks %}
+              <span><a href="#">{{isbn.isbn}}</a></span>
+            {% endfor %}
+          {% else %}
+            <!--student request logic-->
+            <a href="#" class="btn btn-primary">Request Book</a>
+          {% endif %}
         {%else%}
           No Copies Available yet. Try again later.
         {% endif %}
