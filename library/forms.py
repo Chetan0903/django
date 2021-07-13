@@ -2,7 +2,7 @@ from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
-from .models import IssueBook,Book,Student,BookCodes
+from .models import IssueBook,Book, RequestBook,Student,BookCodes
 
 
 class IssueForm(ModelForm):
@@ -13,6 +13,10 @@ class IssueForm(ModelForm):
         model= IssueBook
         fields = '__all__'
 
+class RequestForm(ModelForm):
+    class Meta:
+        model=RequestBook
+        fields=[]
 
 class BookForm(ModelForm):
     class Meta:

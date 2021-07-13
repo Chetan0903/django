@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from datetime import datetime,timedelta
 from django.utils import timezone
 
+
 # Create your models here.
 
 class Book(models.Model):
@@ -14,7 +15,7 @@ class Book(models.Model):
         ('IT', 'IT'),
         ('other','other'),
         ]
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=50,unique=True)
     author = models.CharField(max_length=40)
     department = models.CharField(max_length=30,choices=deptchoice)
 
@@ -78,3 +79,6 @@ class RequestBook(models.Model):
     student = models.ForeignKey('Student',on_delete=models.CASCADE)
     book=models.ForeignKey('Book',on_delete=models.CASCADE)
     timestamp=models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f'request by {self.student} to {self.book} on {self.timestamp}'

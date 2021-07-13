@@ -88,7 +88,7 @@ def userPage(request):
         books=models.BookCodes.objects.filter(isbn=ib.book.isbn)
         
         days=(datetime.now(timezone.utc)-ib.issue_date)
-        print(date.today())
+        #print(date.today())
         d=days.days
         fine=0
         if d>1:
@@ -182,19 +182,32 @@ def studentDetails(request, pk_test):
 #show details of individual book
 @login_required(login_url='login')
 def bookDetails(request, pk_test):
-
+    requestedUser=Student.objects.filter(user__username=request.user).first()#user who requested book
+    if(request.method=='POST'):
+        requestedBook=Book.objects.get(title=request.POST.get('book'))#book title
+        print(request.user.student)
+        requestForBook=RequestBook(book=requestedBook,student=requestedUser)#RequestBook object
+        #print(requestForBook)
+        requestForBook.save()
+        return redirect(userPage)
     book = Book.objects.get(id=pk_test)
     # book_issued = student.issuebook_set.all()
     #book_count = book_issued.count()
     totalBooks=book.bookcodes_set.all().count()
     availableBooks=book.bookcodes_set.filter(status='Available')
     availableBooksCount=availableBooks.count()
+    isRequestedAlready=RequestBook.objects.filter(student=requestedUser).filter(book=book)
+    print(isRequestedAlready,'isalready')#isRequestedAlready is queryset
+    if(isRequestedAlready.count()>0):#already has request
+        isRequestedAlready=1
     #print(totalBooks,availableBooks)
+    form=RequestForm()
     context ={
         'book':book,
         'totalBooks':totalBooks,
         'availableBooks':availableBooks,
-        'availableBooksCount':availableBooksCount
+        'availableBooksCount':availableBooksCount,
+        'isRequestedAlready':isRequestedAlready
         }
     return render(request, 'library/book_details.html',context)
 

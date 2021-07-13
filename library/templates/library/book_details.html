@@ -24,7 +24,16 @@
             {% endfor %}
           {% else %}
             <!--student request logic-->
-            <a href="#" class="btn btn-primary">Request Book</a>
+              {% if isRequestedAlready %}
+                Book is already Requested
+              {% else %}
+              <form method="POST" action="">
+                {% csrf_token %}
+                <input type="hidden" name="book" value="{{book.title}}">
+                <input type="hidden" name="student" value="{{request.user.student}}">
+                <input type="submit" value="Request Book" class="btn btn-primary" >
+              </form>
+              {% endif %}
           {% endif %}
         {%else%}
           No Copies Available yet. Try again later.
