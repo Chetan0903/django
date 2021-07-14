@@ -130,3 +130,4 @@ STATICFILES_DIRS = [
 ]
 
 CRISPY_TEMPLATE_PACK='bootstrap4'
+TIME_ZONE =  'Asia/Kolkata'

@@ -6,3 +6,4 @@ from . models import *
 admin.site.register(Book)
 admin.site.register(Student)
 admin.site.register(IssueBook)
+admin.site.register(RequestBook)

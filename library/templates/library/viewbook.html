@@ -50,15 +50,12 @@
               <td>{{count.0}}</td><!--total-->
 			        <td>{{count.1}}</td><!--avilable  -->
               <td>
-                <a
-                  class="btn btn-sm btn-info"
-                  href="{% url 'bookdetails' book.id %}"
-                  >View</a
-                >
+                <a class="btn btn-sm btn-info" href="{% url 'bookdetails' book.id %}">View</a>
               </td>
             </tr>
             {% endfor %}
           </table>
+          <p>Not able to find book? Add Book here <a href="{% url 'addBookOptions' %}">Add Books</a></p>
         </div>
       </div>
     </div>

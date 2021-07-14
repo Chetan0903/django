@@ -33,7 +33,6 @@ def registerPage(request):
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
         if form.is_valid():
-
             user = form.save()
             username = form.cleaned_data.get('username')  
             #messages.success(request, 'Account was created for ' + username)
@@ -331,8 +330,23 @@ def deleteBook(request, pk):
 @allowed_users(allowed_roles=['admin'])
 def viewRequestedBook(request,pk_test):
     print(request.POST,pk_test)
+    requested=RequestBook.objects.filter(book__id=pk_test).order_by('timestamp')
+    print(requested)
     print("inside viewrequested book section")
-    return HttpResponse(f'<h1>inside view requested book view {pk_test}</h1>')
+    book = Book.objects.get(id=pk_test)
+    totalBooks=book.bookcodes_set.all().count()
+    availableBooks=book.bookcodes_set.filter(status='Available')
+    availableBooksCount=availableBooks.count()
+    form=RequestForm()
+    context ={
+        'book':book,
+        'totalBooks':totalBooks,
+        'availableBooks':availableBooks,
+        'availableBooksCount':availableBooksCount,
+        'requested':requested
+        }
+    
+    return render(request,'library/requestedBookList.html',context)
 
 
 #To add student

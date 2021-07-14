@@ -78,7 +78,11 @@ class IssueBook(models.Model):
 class RequestBook(models.Model):
     student = models.ForeignKey('Student',on_delete=models.CASCADE)
     book=models.ForeignKey('Book',on_delete=models.CASCADE)
-    timestamp=models.DateTimeField(default=timezone.now)
+    timestamp=models.DateTimeField(editable=False)
+
+    def save(self, *args, **kwargs):
+        self.timestamp=timezone.now()
+        return super(RequestBook, self).save(*args, **kwargs)
 
     def __str__(self):
         return f'request by {self.student} to {self.book} on {self.timestamp}'

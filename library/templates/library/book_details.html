@@ -49,6 +49,7 @@
         <div class="card card-body">
           <h5>Options:</h5>
           <div class="text-center">
+            <span><a class="btn btn-primary" href="{% url 'viewRequestedBook' book.id %}">Show Requests</a></span>
             <span><a class="btn btn-primary" href="{% url 'updatebook' book.id %}">Update Book</a></span>
             <span><a class="btn btn-danger " href="{% url 'deletebook' book.id %}">Delete Book</a></span>
           </div>
