@@ -13,9 +13,14 @@ urlpatterns = [
     path('viewstudent/', views.viewstudent, name="viewstudent"),
     path('studentdetails/<str:pk_test>/', views.studentDetails, name="studentdetails"),
     path('bookdetails/<str:pk_test>/', views.bookDetails, name="bookdetails"),
+    path('bookdetails/requested/<str:pk_test>/', views.viewRequestedBook, name="viewRequestedBook"),
     path('issuebook/<str:pk>/', views.bookIssue, name="issuebook"),
     path('returnbook/<str:pk>/', views.bookReturn, name="returnbook"),
-    path('addbook/', views.addBook, name="addbook"),
+
+    path('addbook/addnewbook', views.addBook, name="addbook"),
+    path('addbook/addbookdetailspage/',views.addBookOptionsPage,name="addBookOptions"),
+    path('addbook/addbookcopy/',views.addNewCopy,name='addbookcopy'),
+
     path('addstudent/', views.addStudent, name="addstudent"),
     
     path('updatestudent/<str:pk>/', views.updateStudent, name="updatestudent"),

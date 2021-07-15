@@ -6,11 +6,10 @@
     <title>ONLINE LIBRARY</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-
-
+	{% load crispy_forms_tags %}
     <style type="text/css">
     	body {
     		color: #aa082e;
@@ -85,13 +84,15 @@
     	.signup-form form a:hover {
     		text-decoration: underline;
     	}
+		#id_book{
+			width: 100%;
+		}
+		.selection>.select2-selection--single{
+			height: calc(1.5em + .75rem + 2px);
+			padding: .375rem .75rem;
+			border: 1px solid #ced4da;
+		}
     </style>
-
-
-
-
-
-
   </head>
   <body style="background-color:#b6bde7;">
     {% include "library/navbaradmin.html" %}
@@ -100,21 +101,9 @@
 <center><h3 style=" margin-bottom: 0px;"class = 'alert alert-success'>ADD STUDENT TO LIBRARY !</h3></center>
     <div class="signup-form">
         <form  method="post" class="form-horizontal">
-
-    			<center><h2> STUDENT DETAILS</h2></center>
-
-{% csrf_token %}
-
-            {% for field in form %}
-            <div class="form-group">
-              <label class="control-label col-xs-4">{{ field.label_tag }}</label>
-              <div class="col-xs-8">
-              {{ field }}
-               </div>
-            </div>
-            {% endfor %}
-
-
+			<center><h2> STUDENT DETAILS</h2></center>
+			{% csrf_token %}
+            {{form|crispy}}
     		<div class="form-group">
     			<div class="col-xs-8 col-xs-offset-4">
             <button type="submit" class="btn btn-primary btn-lg">ADD</button>
@@ -125,7 +114,14 @@
     </div>
 
 
-
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+	<script>
+		// In your Javascript (external .js resource or <script> tag)
+		$(document).ready(function() {
+			$('#id_user').select2();
+		});
+	</script>
 
  
   </body>

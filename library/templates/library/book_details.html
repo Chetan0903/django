@@ -1,36 +1,61 @@
-{%  extends 'library/main.html' %}
-
+{% extends 'library/main.html' %} 
+{% load checkAdmin %}
 
 {% block content %}
-
-<h3 class="p-3 mb-2 bg-primary text-white" style = 'font-size: 50px;text-align:center;' ></h3>
-<div class="row">
-	<div class="col-md">
-
-
-	<div class="col-md">
-		<div class="card card-body">
-			<h5>Book Information</h5>
-            <hr>
-            <p>TITLE: {{book.title}} </p>
-            <p>ISBN: {{book.isbn}} </p>
-            <p>AUTHOR: {{book.author}} </p>
-			<p>DEPARTMENT: {{book.department}} </p>
-			<p>STATUS: {{book.status}} </p>
-            
-		</div>
-	</div>
-
-	
-	<div class="row">
-		<div class="col-md">
-			<div class="card card-body">
-				<h5>Options:</h5>
-				<hr>
-				<a class="btn btn-outline-info  btn-sm btn-block" href="{% url 'updatebook' book.id %}">Update Book</a>
-				<a class="btn btn-outline-danger  btn-sm btn-block" href="{% url 'deletebook' book.id %}">Delete Book</a>
-	
-			</div>
-		</div>
-
+  <h3 class="p-3 mb-2 bg-primary text-white"style="font-size: 50px; text-align: center"></h3>
+  <div class="row">
+    <div class="col-md">
+      <div class="col-md">
+        <div class="card card-body">
+          <h5>Book Information</h5>
+          <hr />
+          <p>TITLE: {{book.title}}</p>
+          <p>AUTHOR: {{book.author}}</p>
+          <p>DEPARTMENT: {{book.department}}</p>
+          <p>Total Books: {{totalBooks}}</p>
+          <p>Available Books: {{availableBooksCount}}</p>
+      <hr>
+      <div class="col-md mr-3">
+        {% if availableBooks|length > 0 %}
+          {% if request.user|isAdmin %}
+            Available ISBN's:
+            {% for isbn in availableBooks %}
+              <span><a href="#">{{isbn.isbn}}</a></span>
+            {% endfor %}
+          {% else %}
+            <!--student request logic-->
+              {% if isRequestedAlready %}
+                Book is already Requested
+              {% else %}
+              <form method="POST" action="">
+                {% csrf_token %}
+                <input type="hidden" name="book" value="{{book.title}}">
+                <input type="hidden" name="student" value="{{request.user.student}}">
+                <input type="submit" value="Request Book" class="btn btn-primary" >
+              </form>
+              {% endif %}
+          {% endif %}
+        {%else%}
+          No Copies Available yet. Try again later.
+        {% endif %}
+      </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% if request.user|isAdmin %}
+    <div class="row">
+      <div class="col-md">
+        <div class="card card-body">
+          <h5>Options:</h5>
+          <div class="text-center">
+            <span><a class="btn btn-primary" href="{% url 'viewRequestedBook' book.id %}">Show Requests</a></span>
+            <span><a class="btn btn-primary" href="{% url 'updatebook' book.id %}">Update Book</a></span>
+            <span><a class="btn btn-danger " href="{% url 'deletebook' book.id %}">Delete Book</a></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
 {% endblock %}
+ 

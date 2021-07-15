@@ -1,0 +1,42 @@
+{% extends 'library/main.html' %} 
+{% block content %}
+  <h3 class="p-3 mb-2 bg-primary text-white"style="font-size: 50px; text-align: center"></h3>
+  <div class="row">
+    <div class="col-md">
+      <div class="col-md">
+        <div class="card card-body">
+          <h5>Book Information</h5>
+          <hr />
+          <p>TITLE: {{book.title}}</p>
+          <p>AUTHOR: {{book.author}}</p>
+          <p>DEPARTMENT: {{book.department}}</p>
+          <p>Total Books: {{totalBooks}}</p>
+          <p>Available Books: {{availableBooksCount}}</p>
+        
+          <div class="row">
+            <div class="col-md">
+              <div class="card card-body">
+                <table class="table table-sm">
+                  <tr>
+                    <th>Book Name</th>
+                    <th>Requested Student</th>
+                    <th>Time of Request</th>
+                  </tr>
+                    {% for request in requested %}
+                    <tr>
+                        <td>{{request.book}}</td>
+                        <td>{{request.student}}</td>
+                        <td>{{request.timestamp}}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+{% endblock %}
+ 

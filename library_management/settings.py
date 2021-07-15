@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'library',
     'django_filters',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -77,14 +78,14 @@ WSGI_APPLICATION = 'library_management.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-'default': {
-'ENGINE': 'django.db.backends.mysql',
-'NAME': 'library',
-'USER': 'root',
-'PASSWORD': 'adahhwlbmn',
-'HOST': 'localhost',
-'PORT': '3306',
-}
+    'default': {
+    'ENGINE': 'django.db.backends.mysql',
+    'NAME': 'library',
+    'USER': 'root',
+    'PASSWORD': os.getenv('mysql-password'),
+    'HOST': 'localhost',
+    'PORT': '3306',
+    }
 }
 
 # Password validation
@@ -127,3 +128,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
    os.path.join(BASE_DIR,'static')
 ]
+
+CRISPY_TEMPLATE_PACK='bootstrap4'
+TIME_ZONE =  'Asia/Kolkata'
