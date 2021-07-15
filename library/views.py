@@ -218,7 +218,7 @@ def bookIssue(request, pk):
 
     student = Student.objects.get(id=pk)
 
-    form = IssueForm(initial={'student': student})
+    form = IssueForm(pk,initial={'student': student})
 
     if request.method == 'POST':
         form = IssueForm(request.POST)
