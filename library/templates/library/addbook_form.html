@@ -6,9 +6,8 @@
     <title>ONLINE LIBRARY</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 	{% load crispy_forms_tags %}
     <style type="text/css">
     	body {
@@ -28,8 +27,17 @@
             border-radius: 3px;
         }
 		.card{
+			position: relative;
 			margin:0 auto;
-			width:80vh;
+			width:100vh;
+		}
+		#id_book{
+			width: 100%;
+		}
+		.selection>.select2-selection--single{
+			height: calc(1.5em + .75rem + 2px);
+			padding: .375rem .75rem;
+			border: 1px solid #ced4da;
 		}
     </style>
   </head>
@@ -54,8 +62,14 @@
 		</div>
 
 
-
-
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+	<script>
+		// In your Javascript (external .js resource or <script> tag)
+		$(document).ready(function() {
+			$('#id_book').select2();
+		});
+	</script>
  
   </body>
 </html>
