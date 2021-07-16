@@ -10,7 +10,7 @@ from django.contrib import messages
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
-
+from django.db.models import Count
 
 
 # Create your views here.
@@ -113,22 +113,23 @@ def home(request):
 
 @login_required(login_url='login')
 def viewbook(request):
-    books = models.Book.objects.all()
+    books = Book.objects.all()
     #For search
     myFilter = BookFilter(request.GET,queryset=books)
     books = myFilter.qs
     booksCountTotal=list()
     booksCountAvl=list()
+    requestForThatBook=list()
+    for book in books:
+        booksCountTotal.append(BookCodes.objects.filter(book__title=book.title).count())
+        booksCountAvl.append(BookCodes.objects.filter(book__title=book.title).filter(status='Available').count())
+        requestForThatBook.append(book.requestbook_set.count())
     
-    for i in books:
-        booksCountTotal.append(BookCodes.objects.filter(book__title=i.title).count())
-        booksCountAvl.append(BookCodes.objects.filter(book__title=i.title).filter(status='Available').count())
-        #print(i,BookCodes.objects.filter(book__title=i.title).count())
-    
-    booksCount=zip(tuple(booksCountTotal),tuple(booksCountAvl))
+    booksCount=zip(tuple(booksCountTotal),tuple(booksCountAvl),tuple(requestForThatBook))
     #print(booksCount)
     booksCount=tuple(booksCount)#zip of total books and available books
-
+    for i in booksCount:
+        print(i)
     #print(booksCount)
     books=zip(books,booksCount)
     
@@ -396,5 +397,3 @@ def deleteStudent(request, pk):
 
     return render(request, 'library/deletestudent.html', context)     
 
-
-    

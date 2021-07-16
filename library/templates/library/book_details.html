@@ -19,8 +19,8 @@
         {% if availableBooks|length > 0 %}
           {% if request.user|isAdmin %}
             Available ISBN's:
-            {% for isbn in availableBooks %}
-              <span><a href="#">{{isbn.isbn}}</a></span>
+            {% for book in availableBooks %}
+              <span><a href="#">{{book.isbn}}</a></span>
             {% endfor %}
           {% else %}
             <!--student request logic-->
