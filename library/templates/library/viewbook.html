@@ -61,7 +61,9 @@
             </tr>
             {% endfor %}
           </table>
-          <p>Not able to find book? Add Book here <a href="{% url 'addBookOptions' %}">Add Books</a></p>
+          {% if request.user|isAdmin %}
+            <p>Not able to find book? Add Book here <a href="{% url 'addBookOptions' %}">Add Books</a></p>
+          {% endif %}
         </div>
       </div>
     </div>

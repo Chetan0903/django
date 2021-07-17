@@ -142,7 +142,7 @@ def viewbook(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin'])
 def viewstudent(request):
-    student = models.Student.objects.all()
+    student = models.Student.objects.exclude(prn_no__exact='')
     #For search
     myFilter = StudentFilter(request.GET,queryset=student)
     student = myFilter.qs
@@ -371,7 +371,7 @@ def addStudent(request):
 def updateStudent(request, pk):
 
     student = Student.objects.get(id=pk)
-    form = StudentForm(instance=student)    
+    form = StudentForm(pk,initial={'student': student})    
     if request.method == 'POST':
         form = StudentForm(request.POST, instance=student)
         if form.is_valid():
