@@ -21,12 +21,14 @@
                     <th>Book Name</th>
                     <th>Requested Student</th>
                     <th>Time of Request</th>
+                    <th></th>
                   </tr>
                     {% for request in requested %}
                     <tr>
                         <td>{{request.book}}</td>
                         <td>{{request.student}}</td>
                         <td>{{request.timestamp}}</td>
+                        <td><a href="#">Issue book</a></td>
                     </tr>
                     {% endfor %}
                 </table>

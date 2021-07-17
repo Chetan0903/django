@@ -18,9 +18,9 @@ class StudentFilter(django_filters.FilterSet):
 class BookFilter(django_filters.FilterSet):
     	
 	title = CharFilter(field_name='title', lookup_expr='icontains')
-
+	author = CharFilter(field_name='author', lookup_expr='icontains')
 
 	class Meta:
 		model = Book
 		fields = '__all__'
-		exclude = ['author', 'available_copies','total_copies']        
+		exclude = ['available_copies','total_copies']        

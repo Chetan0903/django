@@ -1,4 +1,6 @@
-{% extends 'library/main.html' %} {% block content %}
+{% extends 'library/main.html' %} 
+{% load checkAdmin %}
+{% block content %}
 
 <h3
   class="p-3 mb-2 bg-primary text-white"
@@ -39,6 +41,9 @@
               <th>Category</th>
               <th>Total Books</th>
               <th>Available books</th>
+              {% if request.user|isAdmin %}
+                <th>Requested Count</th>
+              {% endif %}
               <th>Book Details</th>
             </tr>
 
@@ -49,13 +54,16 @@
               <td>{{book.department}}</td>
               <td>{{count.0}}</td><!--total-->
 			        <td>{{count.1}}</td><!--avilable  -->
-              <td>
-                <a class="btn btn-sm btn-info" href="{% url 'bookdetails' book.id %}">View</a>
-              </td>
+              {% if request.user|isAdmin %}
+                <td>{{count.2}}</td><!--requested-->
+              {% endif %}
+              <td><a class="btn btn-sm btn-info" href="{% url 'bookdetails' book.id %}">View</a></td>
             </tr>
             {% endfor %}
           </table>
-          <p>Not able to find book? Add Book here <a href="{% url 'addBookOptions' %}">Add Books</a></p>
+          {% if request.user|isAdmin %}
+            <p>Not able to find book? Add Book here <a href="{% url 'addBookOptions' %}">Add Books</a></p>
+          {% endif %}
         </div>
       </div>
     </div>
