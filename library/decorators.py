@@ -31,7 +31,6 @@ def allowed_users(allowed_roles=[]):
 
 
 
-
 def admin_only(view_func):
 	def wrapper_function(request, *args, **kwargs):
 		group = None

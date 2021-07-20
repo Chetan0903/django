@@ -1,7 +1,6 @@
-{% extends 'library/main.html' %} 
+{% extends 'library/main.html' %}
+{% load crispy_forms_tags %} 
 {% block content %}
-	{% load crispy_forms_tags %}
-
 	<br />
 	<h3 class="p-3 mb-2 bg-primary text-white" style="font-size: 50px; text-align: center"></h3>
 	<div class="row">
@@ -50,11 +49,9 @@
 				{% endfor %}
 			</table>
 			<p>Want to add student? Add it here <a href="{% url 'addstudent' %}">Add Student</a></p>
-
 			</div>
 		</div>
 		</div>
 
-		{% endblock %}
-  </div>
-</div>
+{% endblock %}
+

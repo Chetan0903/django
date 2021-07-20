@@ -38,7 +38,7 @@
             <tr>
               <th>Book Name</th>
               <th>Author</th>
-              <th>Category</th>
+              <th>Department</th>
               <th>Total Books</th>
               <th>Available books</th>
               {% if request.user|isAdmin %}
@@ -61,9 +61,7 @@
             </tr>
             {% endfor %}
           </table>
-          {% if request.user|isAdmin %}
-            <p>Not able to find book? Add Book here <a href="{% url 'addBookOptions' %}">Add Books</a></p>
-          {% endif %}
+          <p>Not able to find book? Add Book here <a href="{% url 'addBookOptions' %}">Add Books</a></p>
         </div>
       </div>
     </div>

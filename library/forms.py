@@ -30,13 +30,12 @@ class AddBookCopyForm(ModelForm):
         fields = '__all__'   
 
 class StudentForm(ModelForm):
-    def __init__(self,pk,*args,**kwargs):
-        print(pk)
+    def __init__(self,*args,**kwargs):
         super (StudentForm,self ).__init__(*args,**kwargs)
-        self.fields['user'].queryset=Student.objects.filter(id=pk)  
+        self.fields['user'].queryset=User.objects.filter(student__prn_no=None).exclude(groups__name='admin')
     class Meta:
         model = Student
-        fields = '__all__'        
+        fields = '__all__'
 
 class CreateUserForm(UserCreationForm):
     class Meta:

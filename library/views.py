@@ -128,8 +128,8 @@ def viewbook(request):
     booksCount=zip(tuple(booksCountTotal),tuple(booksCountAvl),tuple(requestForThatBook))
     #print(booksCount)
     booksCount=tuple(booksCount)#zip of total books and available books
-    for i in booksCount:
-        print(i)
+    #for i in booksCount:
+     #   print(i)
     #print(booksCount)
     books=zip(books,booksCount)
     
@@ -371,7 +371,7 @@ def addStudent(request):
 def updateStudent(request, pk):
 
     student = Student.objects.get(id=pk)
-    form = StudentForm(pk,initial={'student': student})    
+    form = StudentForm(instance=student)    
     if request.method == 'POST':
         form = StudentForm(request.POST, instance=student)
         if form.is_valid():
