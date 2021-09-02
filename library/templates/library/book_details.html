@@ -26,13 +26,23 @@
             <!--student request logic-->
               {% if isRequestedAlready %}
                 Book is already Requested
+                <!--to cancel book request-->
+                <form method="POST" action="">
+                  {% csrf_token %}
+                  <input type="hidden" name="act" value="cancel">
+                  <input type="hidden" name="book" value="{{book.title}}">
+                  <input type="hidden" name="student" value="{{request.user.student}}">
+                  <input type="submit" value="Cancel Book Request" class="btn btn-warning" >
+                </form>
               {% else %}
-              <form method="POST" action="">
-                {% csrf_token %}
-                <input type="hidden" name="book" value="{{book.title}}">
-                <input type="hidden" name="student" value="{{request.user.student}}">
-                <input type="submit" value="Request Book" class="btn btn-primary" >
-              </form>
+                <!--to request book-->
+                <form method="POST" action="">
+                  {% csrf_token %}
+                  <input type="hidden" name="act" value="request">
+                  <input type="hidden" name="book" value="{{book.title}}">
+                  <input type="hidden" name="student" value="{{request.user.student}}">
+                  <input type="submit" value="Request Book" class="btn btn-primary" >
+                </form>
               {% endif %}
           {% endif %}
         {%else%}

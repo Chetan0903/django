@@ -1,0 +1,47 @@
+{% extends 'library/main.html' %} 
+{% block content %}
+  <h3 class="p-3 mt-4 mb-2 bg-primary text-white"style="font-size: 50px; text-align: center"></h3>
+  <div class="row">
+    <div class="col-md">
+      <div class="col-md">
+        {% if requested|length > 0 %}
+        <div class="card card-body">
+            All requested books
+            <div class="row">
+                <div class="col-md">
+                    <div class="card card-body">
+                        <table class="table table-sm">
+                        <tr>
+                            <th>Book Name</th>
+                            <th>Author Name</th>
+                            <th>Time of Request</th>
+                            <th></th>
+                        </tr>
+                            {% for request in requested %}
+                            <tr>
+                                <td>{{request.book}}</td>
+                                <td>{{request.book.author}}</td>
+                                <td>{{request.timestamp}}</td>
+                                <td>
+                                    <form action="" method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="book" value="{{request.book.title}}">
+                                        <input type="submit" value="Cancel Book Request" class="btn btn-outline-warning">
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+            <p>You haven't requested any books yet. To search & request a book, visit <a href="{% url 'viewbook' %}">Books Section</a></p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  
+{% endblock %}
+ 
