@@ -24,7 +24,7 @@
             {% endfor %}
           {% else %}
             <!--student request logic-->
-              {% if isRequestedAlready %}
+              {% if isRequestedAlready %}<!--requested but not issued-->
                 Book is already Requested
                 <!--to cancel book request-->
                 <form method="POST" action="">
@@ -34,7 +34,9 @@
                   <input type="hidden" name="student" value="{{request.user.student}}">
                   <input type="submit" value="Cancel Book Request" class="btn btn-warning" >
                 </form>
-              {% else %}
+              {% elif isIssuedAlready %}
+                  Book is already Issued to you
+              {% else %}<!--to request book-->
                 <!--to request book-->
                 <form method="POST" action="">
                   {% csrf_token %}
@@ -43,6 +45,7 @@
                   <input type="hidden" name="student" value="{{request.user.student}}">
                   <input type="submit" value="Request Book" class="btn btn-primary" >
                 </form>
+
               {% endif %}
           {% endif %}
         {%else%}

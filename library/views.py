@@ -212,9 +212,14 @@ def bookDetails(request, pk_test):
     totalBooks=book.bookcodes_set.all().count()
     availableBooks=book.bookcodes_set.filter(status='Available')
     availableBooksCount=availableBooks.count()
-    isRequestedAlready=RequestBook.objects.filter(student=requestedUser).filter(book=book)
-    print(isRequestedAlready,'isalready')#isRequestedAlready is queryset
-    if(isRequestedAlready.count()>0):#already has request
+    #print(isRequestedAlready,'isalready')#isRequestedAlready is queryset
+    isIssuedAlready=0
+    isRequestedAlready=0
+
+    if( IssueBook.objects.filter(student=requestedUser).filter(book__book=book).count()!=0 ):#checking if book is issued alredy
+        isIssuedAlready=1
+        isRequestedAlready=0#removing cancel option for that book if already issued
+    if(RequestBook.objects.filter(student=requestedUser).filter(book=book).count()>0):#only requested but not got issued
         isRequestedAlready=1
     #print(totalBooks,availableBooks)
     form=RequestForm()
@@ -223,7 +228,8 @@ def bookDetails(request, pk_test):
         'totalBooks':totalBooks,
         'availableBooks':availableBooks,
         'availableBooksCount':availableBooksCount,
-        'isRequestedAlready':isRequestedAlready
+        'isRequestedAlready':isRequestedAlready,
+        'isIssuedAlready':isIssuedAlready
         }
     return render(request, 'library/book_details.html',context)
 
