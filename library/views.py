@@ -422,6 +422,7 @@ def updateStudent(request, pk):
             student.branch=form.cleaned_data['branch']
             student.contact_no=form.cleaned_data['contact_no']
             student.save()
+            messages.success(request,f'{student} updated successfully!!')
             return redirect('/')
 
 
