@@ -6,9 +6,10 @@ from .models import IssueBook,Book, RequestBook,Student,BookCodes
 
 
 class IssueForm(ModelForm):
-    def __init__(self,pk,*args,**kwargs):
+    def __init__(self,*args,**kwargs):
+        userId=kwargs.pop('userId')
         super (IssueForm,self ).__init__(*args,**kwargs)
-        self.fields['student'].queryset=Student.objects.filter(id=pk)
+        self.fields['student'].queryset=Student.objects.filter(id=userId)
         self.fields['book'].queryset=BookCodes.objects.filter(status='Available')
     class Meta:
         model= IssueBook
@@ -30,12 +31,15 @@ class AddBookCopyForm(ModelForm):
         fields = '__all__'   
 
 class StudentForm(ModelForm):
+
     def __init__(self,*args,**kwargs):
+        user= kwargs.pop('user')
         super (StudentForm,self ).__init__(*args,**kwargs)
-        self.fields['user'].queryset=User.objects.filter(student__prn_no=None).exclude(groups__name='admin')
+        #self.fields['user'].queryset=Student.objects.filter(user=user)
+        
     class Meta:
         model = Student
-        fields = '__all__'
+        fields = ['name','prn_no','branch','contact_no']
 
 class CreateUserForm(UserCreationForm):
     class Meta:

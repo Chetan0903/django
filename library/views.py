@@ -197,7 +197,7 @@ def bookDetails(request, pk_test):
     if(request.method=='POST'):
         action=request.POST.get('act')
         requestedBook=Book.objects.get(title=request.POST.get('book'))#book title
-        print(request.user.student)
+        #print(request.user.student)
         if(action=='request'):
             requestForBook=RequestBook(book=requestedBook,student=requestedUser)#RequestBook object
             #print(requestForBook)
@@ -241,10 +241,10 @@ def bookIssue(request, pk):
 
     student = Student.objects.get(id=pk)
 
-    form = IssueForm(pk,initial={'student': student})
+    form = IssueForm(initial={'student':student},userId=student.id)
 
     if request.method == 'POST':
-        form = IssueForm(request.POST)
+        form = IssueForm(request.POST,initial={'student':student},userId=student.id)
         if form.is_valid():
             #field.book.status= 'Not Available'
             bk = form.cleaned_data['book']
@@ -411,13 +411,17 @@ def addStudent(request):
 #To update student info
 @login_required(login_url='login')
 def updateStudent(request, pk):
-
     student = Student.objects.get(id=pk)
-    form = StudentForm(instance=student)    
+    form = StudentForm(initial={'student':student,'name':student.name,'branch':student.branch,'contact_no':student.contact_no,'prn_no':student.prn_no},user=student.user) 
     if request.method == 'POST':
-        form = StudentForm(request.POST, instance=student)
+        form = StudentForm(request.POST,initial={'student':student,'name':student.name},user=student.user)
         if form.is_valid():
-            form.save()
+            student=Student.objects.get(user=student.user)
+            student.name=form.cleaned_data['name']
+            student.prn_no=form.cleaned_data['prn_no']
+            student.branch=form.cleaned_data['branch']
+            student.contact_no=form.cleaned_data['contact_no']
+            student.save()
             return redirect('/')
 
 
