@@ -1,7 +1,7 @@
 from django.db.models.query import QuerySet
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-
+from django.urls import reverse
 from django.contrib.auth.forms import UserCreationForm
 
 from django.contrib.auth import authenticate, login, logout
@@ -84,7 +84,7 @@ def userPage(request):
 
     li2=[]
     for ib in book_issued:
-        books=models.BookCodes.objects.filter(isbn=ib.book.isbn)
+        books=BookCodes.objects.filter(isbn=ib.book.isbn)
         
         days=(datetime.now(timezone.utc)-ib.issue_date)
         #print(date.today())
@@ -93,8 +93,8 @@ def userPage(request):
         if d>1:
             day=d-1
             fine=day*10
-
-        t = (ib.book.title,ib.book.isbn,ib.book.department,ib.issue_date,ib.return_date,fine)
+        t = (ib.book.book.title,ib.book.isbn,ib.book.book.department,ib.issue_date,ib.return_date,fine)
+        #print(t)
         li2.append(t)
         
 
@@ -150,6 +150,17 @@ def viewstudent(request):
     context ={'student':student,'myFilter': myFilter}
     return render(request,'library/viewstudent.html',context)
 
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['student'])
+def studentRequested(request,pk):
+    student=Student.objects.get(pk=pk)
+    if(request.method=="POST"):
+        requestedBook=Book.objects.get(title=request.POST.get('book'))
+        alreadyRequestedBook=RequestBook.objects.filter(book=requestedBook).filter(student=student).first()
+        alreadyRequestedBook.delete()
+    requested=RequestBook.objects.filter(student__id=pk)
+    #print(requested)
+    return render(request,'library/studentRequestedList.html',{'requested':requested})
 
 #show details of individual student
 @login_required(login_url='login')
@@ -157,7 +168,7 @@ def viewstudent(request):
 def studentDetails(request, pk_test):
     student = Student.objects.get(id=pk_test)
     book_issued = student.issuebook_set.all()
-    book_count = book_issued.count()   
+    book_count = book_issued.count()
 
     li2=[]
     for ib in book_issued:
@@ -184,11 +195,16 @@ def studentDetails(request, pk_test):
 def bookDetails(request, pk_test):
     requestedUser=Student.objects.filter(user__username=request.user).first()#user who requested book
     if(request.method=='POST'):
+        action=request.POST.get('act')
         requestedBook=Book.objects.get(title=request.POST.get('book'))#book title
-        print(request.user.student)
-        requestForBook=RequestBook(book=requestedBook,student=requestedUser)#RequestBook object
-        #print(requestForBook)
-        requestForBook.save()
+        #print(request.user.student)
+        if(action=='request'):
+            requestForBook=RequestBook(book=requestedBook,student=requestedUser)#RequestBook object
+            #print(requestForBook)
+            requestForBook.save()
+        else:#action=cancel
+            alreadyRequestedBook=RequestBook.objects.filter(book=requestedBook).filter(student=requestedUser).first()
+            alreadyRequestedBook.delete()
         return redirect(userPage)
     book = Book.objects.get(id=pk_test)
     # book_issued = student.issuebook_set.all()
@@ -196,9 +212,14 @@ def bookDetails(request, pk_test):
     totalBooks=book.bookcodes_set.all().count()
     availableBooks=book.bookcodes_set.filter(status='Available')
     availableBooksCount=availableBooks.count()
-    isRequestedAlready=RequestBook.objects.filter(student=requestedUser).filter(book=book)
-    print(isRequestedAlready,'isalready')#isRequestedAlready is queryset
-    if(isRequestedAlready.count()>0):#already has request
+    #print(isRequestedAlready,'isalready')#isRequestedAlready is queryset
+    isIssuedAlready=0
+    isRequestedAlready=0
+
+    if( IssueBook.objects.filter(student=requestedUser).filter(book__book=book).count()!=0 ):#checking if book is issued alredy
+        isIssuedAlready=1
+        isRequestedAlready=0#removing cancel option for that book if already issued
+    if(RequestBook.objects.filter(student=requestedUser).filter(book=book).count()>0):#only requested but not got issued
         isRequestedAlready=1
     #print(totalBooks,availableBooks)
     form=RequestForm()
@@ -207,7 +228,8 @@ def bookDetails(request, pk_test):
         'totalBooks':totalBooks,
         'availableBooks':availableBooks,
         'availableBooksCount':availableBooksCount,
-        'isRequestedAlready':isRequestedAlready
+        'isRequestedAlready':isRequestedAlready,
+        'isIssuedAlready':isIssuedAlready
         }
     return render(request, 'library/book_details.html',context)
 
@@ -219,10 +241,10 @@ def bookIssue(request, pk):
 
     student = Student.objects.get(id=pk)
 
-    form = IssueForm(pk,initial={'student': student})
+    form = IssueForm(initial={'student':student},userId=student.id)
 
     if request.method == 'POST':
-        form = IssueForm(request.POST)
+        form = IssueForm(request.POST,initial={'student':student},userId=student.id)
         if form.is_valid():
             #field.book.status= 'Not Available'
             bk = form.cleaned_data['book']
@@ -330,21 +352,41 @@ def deleteBook(request, pk):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin'])
 def viewRequestedBook(request,pk_test):
-    print(request.POST,pk_test)
+    #print(request.POST,pk_test)
+    if request.method=="POST":
+        print('captured request')
+        requestUserPrn=request.POST.get('student')
+        student=Student.objects.get(prn_no=requestUserPrn)
+        books=BookCodes.objects.filter(book__title=request.POST.get('book')).filter(status='Available')
+        print(books,len(books))
+        if(len(books)==0):
+            return HttpResponse("<p>No books available at this time</p>")
+        else:
+            book=books.first()
+            book.status='Not Available'
+            book.save()
+            #create issuebook obj 
+            issueObj=IssueBook(book=book,student=student)
+            issueObj.save()
+            #deleting request for that book
+            #print('request book deletion')
+            RequestBook.objects.filter(student=student).filter(book__title=book.book.title).first().delete()
+            return redirect(reverse('viewRequestedBook', kwargs={"pk_test": pk_test}))
+
     requested=RequestBook.objects.filter(book__id=pk_test).order_by('timestamp')
-    print(requested)
-    print("inside viewrequested book section")
+    #print(requested)
+    #print("inside viewrequested book section")
     book = Book.objects.get(id=pk_test)
     totalBooks=book.bookcodes_set.all().count()
     availableBooks=book.bookcodes_set.filter(status='Available')
     availableBooksCount=availableBooks.count()
-    form=RequestForm()
+    #form=RequestForm()
     context ={
         'book':book,
         'totalBooks':totalBooks,
         'availableBooks':availableBooks,
         'availableBooksCount':availableBooksCount,
-        'requested':requested
+        'requested':requested,
         }
     
     return render(request,'library/requestedBookList.html',context)
@@ -369,13 +411,18 @@ def addStudent(request):
 #To update student info
 @login_required(login_url='login')
 def updateStudent(request, pk):
-
     student = Student.objects.get(id=pk)
-    form = StudentForm(instance=student)    
+    form = StudentForm(initial={'student':student,'name':student.name,'branch':student.branch,'contact_no':student.contact_no,'prn_no':student.prn_no},user=student.user) 
     if request.method == 'POST':
-        form = StudentForm(request.POST, instance=student)
+        form = StudentForm(request.POST,initial={'student':student,'name':student.name},user=student.user)
         if form.is_valid():
-            form.save()
+            student=Student.objects.get(user=student.user)
+            student.name=form.cleaned_data['name']
+            student.prn_no=form.cleaned_data['prn_no']
+            student.branch=form.cleaned_data['branch']
+            student.contact_no=form.cleaned_data['contact_no']
+            student.save()
+            messages.success(request,f'{student} updated successfully!!')
             return redirect('/')
 
 

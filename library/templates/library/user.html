@@ -11,8 +11,7 @@
 			<hr>
 			<a class="btn btn-outline-info  btn-sm btn-block" href="{% url 'updatestudent' request.user.student.id %}">Update Student</a>
 			<a class="btn btn-outline-info  btn-sm btn-block" href="{% url 'viewbook' %}">Search Book</a>
-			
-
+			<a class="btn btn-outline-info  btn-sm btn-block" href="{% url 'studentRequested' request.user.student.id %}">Requested Books</a>
 		</div>
 	</div>
 
