@@ -17,7 +17,7 @@ def allowed_users(allowed_roles=[]):
 		def wrapper_func(request, *args, **kwargs):
 
 			group = None
-			print(group)
+			#print(group)
 			if request.user.groups.exists():
 				group = request.user.groups.all()[0].name
 
