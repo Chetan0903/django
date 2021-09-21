@@ -32,13 +32,22 @@
     <br>
     <br>
     <div class="container">
-        <div class="child">
-            <div><a href="{% url 'addbook' %}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Add New Book To Library</a></div>
-            Use this option to add new book to library
-        </div>
-        <div class="child">
-            <div><a href="{% url 'addbookcopy' %}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Add New Copies of Book which are present in library</a></div>
-            Use this option to add new copies of books that are alredy in library
+        <div class="child row">
+            <div class="card" style="width: 18rem;background-color:rgb(209, 252, 252)">
+                <div class="card-body">
+                  <h5 class="card-title">Add New Book</h5>
+                  <p class="card-text">add new book which is not in library</p>
+                  <a href="{% url 'addbook' %}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Add New Book To Library</a>
+                </div>
+            </div>
+            <div class="card mt-2" style="width: 18rem;background-color:rgb(209, 252, 252)">
+                <div class="card-body">
+                  <h5 class="card-title">Add New Copy of Book</h5>
+                  <p class="card-text">Use this option to add new copies of books that are alredy in library</p>
+                  <a href="{% url 'addbookcopy' %}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Add New Copy To Library</a>
+                </div>
+            </div>
+           
         </div>
     </div>
 </body>

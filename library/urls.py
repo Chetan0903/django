@@ -3,20 +3,15 @@ from . import views
 
 urlpatterns = [
 
-    path('register/', views.registerPage, name="register"),
-	path('login/', views.loginPage, name="login"),  
-	path('logout/', views.logoutUser, name="logout"),
-    path('user/', views.userPage, name="user-page"),
-
     path('', views.home, name="home"),
     path('viewbook/', views.viewbook, name="viewbook"),
     path('viewstudent/', views.viewstudent, name="viewstudent"),
     path('studentdetails/<str:pk_test>/', views.studentDetails, name="studentdetails"),
     path('bookdetails/<str:pk_test>/', views.bookDetails, name="bookdetails"),
-    path('bookdetails/requested/<str:pk_test>/', views.viewRequestedBook, name="viewRequestedBook"),
+    path('bookdetails/requested/<str:pk_test>/', views.viewRequestedBook, name="viewRequestedBook"),#admin
     path('issuebook/<str:pk>/', views.bookIssue, name="issuebook"),
     path('returnbook/<str:pk>/', views.bookReturn, name="returnbook"),
-
+    path('studentRequested/<str:pk>/', views.studentRequested, name="studentRequested"),#for student
     path('addbook/addnewbook', views.addBook, name="addbook"),
     path('addbook/addbookdetailspage/',views.addBookOptionsPage,name="addBookOptions"),
     path('addbook/addbookcopy/',views.addNewCopy,name='addbookcopy'),

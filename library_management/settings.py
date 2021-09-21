@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'library',
     'django_filters',
     'crispy_forms',
+    'userAuth',
 ]
 
 MIDDLEWARE = [
@@ -131,3 +132,4 @@ STATICFILES_DIRS = [
 
 CRISPY_TEMPLATE_PACK='bootstrap4'
 TIME_ZONE =  'Asia/Kolkata'
+DEFAULT_AUTO_FIELD='django.db.models.AutoField'

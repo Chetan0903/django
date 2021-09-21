@@ -28,7 +28,16 @@
                         <td>{{request.book}}</td>
                         <td>{{request.student}}</td>
                         <td>{{request.timestamp}}</td>
-                        <td><a href="#">Issue book</a></td>
+                        <!--form form issue book-->
+                        <td>
+                          <form method="POST" action="">
+                            {% csrf_token %}
+                            <input type="hidden" name="book" value="{{request.book.title}}">
+                            <input type="hidden" name="student" value="{{request.student.prn_no}}">
+                            <input type="submit" value="Issue Book" class="btn btn-primary" >
+                          </form>
+                        </td>
+                        
                     </tr>
                     {% endfor %}
                 </table>
