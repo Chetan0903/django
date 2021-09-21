@@ -218,7 +218,7 @@ def addBook(request):
         form = BookForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('/')
+            return redirect('addBookOptions')
            # return render(request,'library/bookadded.html')
     context ={'form': form}
     return render(request, 'library/addbook_form.html', context)
@@ -232,7 +232,7 @@ def addNewCopy(request):
         form = AddBookCopyForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('/')
+            return redirect('addBookOptions')
            # return render(request,'library/bookadded.html')
     context ={'form': form}
     return render(request, 'library/addbook_form.html', context)
