@@ -103,3 +103,28 @@ def userPage(request):
 
     context = {'book_issued':book_issued,'book_count':book_count,'li2':li2}
     return render(request,'library/user.html', context)
+
+
+'''
+@login_required(login_url='login')
+def Profile(request):
+    if request.method=="POST":
+        p_form=StudentForm(request.POST,instance=request.user.profile)
+        imgUrl=request.user.profile.image.url
+        path=''
+        systemImgUrl=''
+        
+        if p_form.is_valid():
+            os.remove(systemImgUrl)
+            p_form.save()
+            messages.success(request,f'account settings Updated!!!')
+            return redirect('profile')
+    else:
+        p_form=StudentForm(instance=request.user.profile)
+    context={
+        #'u_form':u_form,
+        'p_form':p_form
+    }
+    return render(request,'users/profile.html',context)
+
+'''

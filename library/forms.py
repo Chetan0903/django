@@ -32,14 +32,16 @@ class AddBookCopyForm(ModelForm):
 
 class StudentForm(ModelForm):
 
-    def __init__(self,*args,**kwargs):
-        user= kwargs.pop('user')
-        super (StudentForm,self ).__init__(*args,**kwargs)
-        #self.fields['user'].queryset=Student.objects.filter(user=user)
-        
+    class Meta:
+        model = Student
+        fields = '__all__'
+       # exclude = ['User']      
+
+class UpdateStudentForm(ModelForm):
     class Meta:
         model = Student
         fields = ['name','prn_no','branch','contact_no']
+       # exclude = ['User']      
 
 class CreateUserForm(UserCreationForm):
     class Meta:

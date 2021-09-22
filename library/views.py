@@ -124,7 +124,7 @@ def bookDetails(request, pk_test):
         else:#action=cancel
             alreadyRequestedBook=RequestBook.objects.filter(book=requestedBook).filter(student=requestedUser).first()
             alreadyRequestedBook.delete()
-        return redirect(userPage)
+        return redirect('/')
     book = Book.objects.get(id=pk_test)
     # book_issued = student.issuebook_set.all()
     #book_count = book_issued.count()
@@ -331,17 +331,15 @@ def addStudent(request):
 @login_required(login_url='login')
 def updateStudent(request, pk):
     student = Student.objects.get(id=pk)
-    form = StudentForm(initial={'student':student,'name':student.name,'branch':student.branch,'contact_no':student.contact_no,'prn_no':student.prn_no},user=student.user) 
+    form = UpdateStudentForm(instance=student) 
     if request.method == 'POST':
+        form = UpdateStudentForm(request.POST, initial={'student':student},instance=student)
+        if form.is_valid():
+            form.save()
         #form = StudentForm(request.POST,initial={'student':student,'name':student.name},user=student.user)
-        student=Student.objects.get(user=student.user)
-        student.name=request.POST.get('name')
-        student.prn_no=request.POST.get('prn_no')
-        student.branch=request.POST.get('branch')
-        student.contact_no=request.POST.get('contact_no')
-        student.save()
-        messages.success(request,f'{student} updated successfully!!')
-        return redirect('/')
+        
+            messages.success(request,f'{student} updated successfully!!')
+            return redirect('/')
 
 
     context ={'form': form}
