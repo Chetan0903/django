@@ -103,10 +103,11 @@
         <form  method="post" class="form-horizontal">
 			<center><h2> STUDENT DETAILS</h2></center>
 			{% csrf_token %}
-            {{form|crispy}}
+            {{user_form|crispy}}
+			{{student_form|crispy}}
     		<div class="form-group">
     			<div class="col-xs-8 col-xs-offset-4">
-            <button type="submit" class="btn btn-primary btn-lg">ADD</button>
+           			 <button type="submit" class="btn btn-primary btn-lg">ADD</button>
     			</div>
     		</div>
         </form>

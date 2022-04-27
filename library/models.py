@@ -1,23 +1,18 @@
+from enum import unique
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime,timedelta
 from django.utils import timezone
-
-
+from django.contrib.auth.models import AbstractUser
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 # Create your models here.
 
 class Book(models.Model):
-    deptchoice= [
-        ('Computer', 'Computer'),
-        ('Mechanical', 'Mechanical'),
-        ('ENTC', 'ENTC'),
-        ('Civil', 'Civil'),
-        ('IT', 'IT'),
-        ('other','other'),
-        ]
+    
     title = models.CharField(max_length=50,unique=True)
     author = models.CharField(max_length=40)
-    department = models.CharField(max_length=30,choices=deptchoice)
+    domain = models.CharField(max_length=50)
 
     def __str__(self):
         return f'{self.title} by {self.author}'
@@ -44,18 +39,16 @@ class Student(models.Model):
         ('Civil', 'Civil'),
         ('IT', 'IT'),
         ]
-
-    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)    
+    
+    user = models.OneToOneField(User, null=False, on_delete=models.CASCADE)    
     prn_no = models.CharField(max_length=10,unique=True)
     name = models.CharField(max_length=40)
     branch = models.CharField(max_length=30,choices=deptchoice)
-    email = models.EmailField(unique=True)
     contact_no = models.CharField(max_length=10)
     total_books_due=models.IntegerField(default=0)
     
-    
     def __str__(self):
-        return str(self.name)+"["+str(self.prn_no)+']'
+        return str(self.prn_no)
 
 
 #relation containing info about Borrowed books

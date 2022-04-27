@@ -34,7 +34,7 @@ class StudentForm(ModelForm):
 
     class Meta:
         model = Student
-        fields = '__all__'
+        fields = ['prn_no','branch','contact_no']
        # exclude = ['User']      
 
 class UpdateStudentForm(ModelForm):
