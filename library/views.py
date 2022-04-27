@@ -47,7 +47,8 @@ def addStudent(request):
             Student.objects.create(user=curr_student_user,
                 prn_no=prn,
                 contact_no=contact,
-                name=name
+                name=name,
+                branch=branch
             )            
             messages.success(request, (f'Student {username} added successfully...'))
             return redirect('/')
@@ -61,40 +62,6 @@ def addStudent(request):
         'student_form': student_form
     })
 
-
-    form = CreateUserForm()
-    if request.method == 'POST':
-        form = CreateUserForm(request.POST)
-        for i in request.POST.items():
-            print(i)
-        if form.is_valid():
-            user = form.save()
-            username = form.cleaned_data.get('username')  
-            name=form.cleaned_data.get('first_name')
-            group = Group.objects.get(name='student')
-            user.groups.add(group)
-            # do some stuff for redirecting to page of student info
-            messages.success(request, 'Account is created for ' + username)
-            return redirect('/')
-            
-    return render(request, 'library/addstudent_form.html', context={'form':form})
-
-
-
-    # context = {'form':form}
-
-    # form = StudentForm()
-    # if request.method == 'POST':
-    #     for i in request.POST.items():
-    #         print(i)
-    #     return redirect('/')
-    #     form = StudentForm(request.POST)
-    #     if form.is_valid():
-    #         form.save()
-    #         return redirect('/')
-
-    # context ={'form': form}
-    # return render(request, 'library/addstudent_form.html', context)
 
 #home page
 @login_required(login_url='login')

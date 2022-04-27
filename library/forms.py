@@ -3,6 +3,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
 from .models import IssueBook,Book, RequestBook,Student,BookCodes
+from library.models import Student
+
 
 
 class IssueForm(ModelForm):
@@ -31,10 +33,18 @@ class AddBookCopyForm(ModelForm):
         fields = '__all__'   
 
 class StudentForm(ModelForm):
-
     class Meta:
         model = Student
         fields = ['prn_no','branch','contact_no']
+
+    def clean(self):
+        super(StudentForm, self).clean()
+        prn_ = self.cleaned_data.get('prn')
+        if(Student.objects.filter(prn_no=prn_).exists() ):
+            self._errors['prn_no'] = self.error_class([
+                'PRN should be unique'])
+        return self.cleaned_data
+        
        # exclude = ['User']      
 
 class UpdateStudentForm(ModelForm):
