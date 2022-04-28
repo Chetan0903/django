@@ -360,14 +360,9 @@ def updateStudent(request, pk):
     form = StudentForm(instance=student) 
     print(student)
     if request.method == 'POST':
-        print("post req")
-        for i in request.POST.items():
-            print(i)
         form = StudentForm(request.POST,instance=student)
         if form.is_valid():
-            print("valid form")
             form.save()
-            print(form.cleaned_data)
             messages.success(request,f'student {student.name} with {student.prn_no} updated successfully!!')
             return redirect('/')
         else:

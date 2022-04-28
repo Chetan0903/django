@@ -20,7 +20,7 @@ class Book(models.Model):
 
 class BookCodes(models.Model):
     book=models.ForeignKey('Book',on_delete=models.CASCADE)
-    isbn = models.PositiveIntegerField(unique=True)
+    isbn = models.CharField(unique=True,max_length=13)
     STATUS = [
         ('Available','Available'),
         ('Not Available','Not Available')
@@ -40,7 +40,7 @@ class Student(models.Model):
         ('IT', 'IT'),
         ]
     
-    user = models.OneToOneField(User, null=False, on_delete=models.CASCADE)    
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)    
     prn_no = models.CharField(max_length=10,unique=True)
     name = models.CharField(max_length=40)
     branch = models.CharField(max_length=30,choices=deptchoice)
@@ -79,3 +79,15 @@ class RequestBook(models.Model):
 
     def __str__(self):
         return f'request by {self.student} to {self.book} on {self.timestamp}'
+
+class HistoryBook(models.Model):
+    RATING_CHOICES = (
+    (1, 'Worse'),
+    (2, 'Ok'),
+    (3, 'Good'),
+    (4, 'Great'),
+    (5, 'Excellent')
+    )
+    book_copy=models.ForeignKey('BookCodes',on_delete=models.CASCADE)
+    student=models.ForeignKey('Student',on_delete=models.CASCADE)
+    rating=models.IntegerField(choices=RATING_CHOICES, default=3)

@@ -11,7 +11,7 @@ print(param,branch_name)
 
 count=1
 
-while count<=5:
+while count<=7:
     # url="https://www.goodreads.com/search?q=mechanical+engineering&qid=vYZOP59sJ9"
     url=f"https://www.goodreads.com/search?q={param}&page={count}"
 
@@ -25,7 +25,7 @@ while count<=5:
     authors=txt.find_all('a',class_="authorName")
     ratings=txt.find_all('span',class_="minirating")
 
-    rating_handler=open("books_data\\book_ratings.csv",'a',encoding='utf-8')
+    rating_handler=open("books_data\\data.csv",'a',encoding='utf-8')
 
     length=len(titles)
 
@@ -34,7 +34,7 @@ while count<=5:
         title=titles[i].span.text
         author=authors[i].span.text
         print(title,author,rating)
-        rating_handler.write(f'"{title}", "{author}", {branch_name}, {rating}\n')
+        rating_handler.write(f'"{title}", "{author}", {branch_name}\n')
 
     count+=1
 
