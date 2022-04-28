@@ -26,7 +26,6 @@ from .decorators import unauthenticated_user,allowed_users,admin_only
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['admin'])
 def addStudent(request):
-
     if request.method == 'POST':
         user_form = CreateUserForm(request.POST)
         student_form = StudentForm(request.POST)
@@ -358,19 +357,25 @@ def viewRequestedBook(request,pk_test):
 @login_required(login_url='login')
 def updateStudent(request, pk):
     student = Student.objects.get(id=pk)
-    form = UpdateStudentForm(instance=student) 
+    form = StudentForm(instance=student) 
+    print(student)
     if request.method == 'POST':
-        form = UpdateStudentForm(request.POST, initial={'student':student},instance=student)
+        print("post req")
+        for i in request.POST.items():
+            print(i)
+        form = StudentForm(request.POST,instance=student)
         if form.is_valid():
+            print("valid form")
             form.save()
-        #form = StudentForm(request.POST,initial={'student':student,'name':student.name},user=student.user)
-        
-            messages.success(request,f'{student} updated successfully!!')
+            print(form.cleaned_data)
+            messages.success(request,f'student {student.name} with {student.prn_no} updated successfully!!')
             return redirect('/')
+        else:
+            print("not valid")
 
 
     context ={'form': form}
-    return render(request, 'library/addstudent_form.html', context)
+    return render(request, 'library/update_student_form.html', context)
 
 
 #Delete Student

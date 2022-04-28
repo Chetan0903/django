@@ -1,5 +1,5 @@
 import csv
-file = open('books data\\books_new.csv')
+file = open('books_data\\books_new.csv')
 csvreader = csv.reader(file)
 next(csvreader, None)
 

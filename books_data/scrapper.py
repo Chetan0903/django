@@ -25,7 +25,7 @@ while count<=5:
     authors=txt.find_all('a',class_="authorName")
     ratings=txt.find_all('span',class_="minirating")
 
-    rating_handler=open("books data\\book_ratings.csv",'a',encoding='utf-8')
+    rating_handler=open("books_data\\book_ratings.csv",'a',encoding='utf-8')
 
     length=len(titles)
 
