@@ -96,7 +96,7 @@ def userPage(request):
         if d>1:
             day=d-1
             fine=day*10
-        t = (ib.book.book.title,ib.book.isbn,ib.book.book.department,ib.issue_date,ib.return_date,fine)
+        t = (ib.book.book.title,ib.book.isbn,ib.book.book.domain,ib.issue_date,ib.return_date,fine)
         #print(t)
         li2.append(t)
         

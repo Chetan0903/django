@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.db.models import Count
+from jsonschema import ValidationError
 
 
 # Create your views here.
@@ -21,8 +22,47 @@ from . import models
 from .filters import StudentFilter,BookFilter
 from .decorators import unauthenticated_user,allowed_users,admin_only
 
-#home page
+#To add student
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
+def addStudent(request):
+    if request.method == 'POST':
+        user_form = CreateUserForm(request.POST)
+        student_form = StudentForm(request.POST)
+        if user_form.is_valid() and student_form.is_valid():
+            # adding user and student
+            name=user_form.cleaned_data['first_name']
+            user_form.save()
+            # adding to student group
+            username=user_form.cleaned_data['username']
+            curr_student_user=User.objects.get(username=username)
+            group = Group.objects.get(name='student')
+            curr_student_user.groups.add(group)
+            # fixing issues
+            prn=student_form.cleaned_data['prn_no']
+            branch=student_form.cleaned_data['branch']
+            contact=student_form.cleaned_data['contact_no']
+            # print(prn,branch,contact)
+            Student.objects.create(user=curr_student_user,
+                prn_no=prn,
+                contact_no=contact,
+                name=name,
+                branch=branch
+            )            
+            messages.success(request, (f'Student {username} added successfully...'))
+            return redirect('/')
+        else:
+            messages.error(request, ('Please correct the error below.'))
+    else:
+        user_form = CreateUserForm()
+        student_form = StudentForm()
+    return render(request, 'library/addstudent_form.html', {
+        'user_form': user_form,
+        'student_form': student_form
+    })
 
+
+#home page
 @login_required(login_url='login')
 @admin_only
 def home(request):
@@ -102,7 +142,7 @@ def studentDetails(request, pk_test):
             day=d-1
             fine=day*10
 
-        t = (ib.book.book.title,ib.book.isbn,ib.book.book.department,ib.issue_date,ib.return_date,fine,ib.id)
+        t = (ib.book.book.title,ib.book.isbn,ib.book.book.domain,ib.issue_date,ib.return_date,fine,ib.id)
         li2.append(t)
         
     context ={'student':student,'book_issued': book_issued,'book_count':book_count,'li2':li2}
@@ -311,39 +351,26 @@ def viewRequestedBook(request,pk_test):
     return render(request,'library/requestedBookList.html',context)
 
 
-#To add student
-@login_required(login_url='login')
-@allowed_users(allowed_roles=['admin'])
-def addStudent(request):
-
-    form = StudentForm()
-    if request.method == 'POST':
-        form = StudentForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('/')
-
-    context ={'form': form}
-    return render(request, 'library/addstudent_form.html', context)
 
 
 #To update student info
 @login_required(login_url='login')
 def updateStudent(request, pk):
     student = Student.objects.get(id=pk)
-    form = UpdateStudentForm(instance=student) 
+    form = StudentForm(instance=student) 
+    print(student)
     if request.method == 'POST':
-        form = UpdateStudentForm(request.POST, initial={'student':student},instance=student)
+        form = StudentForm(request.POST,instance=student)
         if form.is_valid():
             form.save()
-        #form = StudentForm(request.POST,initial={'student':student,'name':student.name},user=student.user)
-        
-            messages.success(request,f'{student} updated successfully!!')
+            messages.success(request,f'student {student.name} with {student.prn_no} updated successfully!!')
             return redirect('/')
+        else:
+            print("not valid")
 
 
     context ={'form': form}
-    return render(request, 'library/addstudent_form.html', context)
+    return render(request, 'library/update_student_form.html', context)
 
 
 #Delete Student
