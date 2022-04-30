@@ -91,3 +91,6 @@ class HistoryBook(models.Model):
     book_copy=models.ForeignKey('BookCodes',on_delete=models.CASCADE)
     student=models.ForeignKey('Student',on_delete=models.CASCADE)
     rating=models.IntegerField(choices=RATING_CHOICES, default=3)
+
+    def __str__(self) -> str:
+        return f'rating {self.rating} by {self.student} to {self.book_copy.book.title[:20]}'
