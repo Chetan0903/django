@@ -94,3 +94,19 @@ class HistoryBook(models.Model):
 
     def __str__(self) -> str:
         return f'rating {self.rating} by {self.student} to {self.book_copy.book.title[:20]}'
+
+class RatingNotifier(models.Model):
+    RATING_CHOICES = (
+        (1, 'Worse'),
+        (2, 'Ok'),
+        (3, 'Good'),
+        (4, 'Great'),
+        (5, 'Excellent')
+        )
+    has_rated=models.BooleanField(default=False)
+    book_to_rate=models.OneToOneField('IssueBook',on_delete=models.CASCADE)
+    rating=models.IntegerField(choices=RATING_CHOICES, default=3)
+
+    def __str__(self):
+        return f'{self.rating},{self.book_to_rate},{self.has_rated}'
+    

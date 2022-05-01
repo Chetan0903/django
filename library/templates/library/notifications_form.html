@@ -1,0 +1,53 @@
+{% extends 'library/main.html' %} 
+{% load crispy_forms_tags%}
+{% block content %}
+<h3 class="p-3 mt-4 mb-2 bg-primary text-white"style="font-size: 50px; text-align: center"></h3>
+<div class="row">
+  <div class="col-md">
+    <div class="col-md">
+        <h2>Notifications:</h2>
+    </div>
+    <div class="col-md">
+        {% if issued.count == 0 %}
+          Nothing here to display :(
+        {% else %}
+        <br>
+        <h5>Ratings yet to be given:</h5>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Title</th>
+              <th scope="col">ISBN</th>
+              <th scope="col">Author</th>
+              <th scope="col">Rating</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              {% for curr in issued %}
+                <td>
+                  {{curr.book.book.title}}
+                </td>
+                <td>
+                  {{curr.book.isbn}}
+                </td>
+                <td>
+                  {{curr.book.book.author}}
+                </td>
+                <td>
+                  <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="id" value="{{curr.id}}">
+                    <button class="btn btn-info">Rate this book</button>
+                  </form>
+                </td>
+              {% endfor %}
+            </tr>
+          </tbody>
+        </table>
+        
+        {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock content %}

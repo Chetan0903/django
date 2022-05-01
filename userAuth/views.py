@@ -14,6 +14,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.db.models import Count
 
+from library.recommender import Recommender
 
 # Create your views here.
 
@@ -82,9 +83,14 @@ def logoutUser(request):
 @login_required(login_url='login')
 @allowed_users(allowed_roles=['student'])
 def userPage(request):
+    recommend=Recommender()
+    r_titles=recommend.recommend(request.user)
     book_issued = request.user.student.issuebook_set.all()
     book_count = book_issued.count()
-
+    recommended_books=[]
+    for i in r_titles:
+        # print(Book.objects.get(title=i))
+        recommended_books.append(Book.objects.get(title=i))
     li2=[]
     for ib in book_issued:
         books=BookCodes.objects.filter(isbn=ib.book.isbn)
@@ -100,8 +106,11 @@ def userPage(request):
         #print(t)
         li2.append(t)
         
-
-    context = {'book_issued':book_issued,'book_count':book_count,'li2':li2}
+    context = {
+        'book_issued':book_issued,'book_count':book_count,
+        'li2':li2,
+        'recommended':recommended_books
+    }
     return render(request,'library/user.html', context)
 
 

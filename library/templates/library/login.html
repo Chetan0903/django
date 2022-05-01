@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html>
 	<center><h3 style=" margin-bottom: 0px;"class = 'alert alert-success'>Welcome to Online library !</h3></center>
 <head>
@@ -18,7 +19,7 @@
 		}
 
 .parallax-image {
-  background-image: url("https://www.targetadmission.com/img/colleges/newc/4682-649409.png");
+  background-image: url("{% static 'images/dyp_campus.jpeg' %}");
   height: 100%;
   background-attachment: fixed;
   background-position: center;
@@ -31,7 +32,7 @@
 			width: 350px;
 			margin-top: auto;
 			margin-bottom: auto;
-			background: linear-gradient(to right, #02aab0, #00cdac);
+			background: linear-gradient(to right, #025eb0ed, #364ab5);
 			position: relative;
 			display: flex;
 			justify-content: center;
@@ -49,8 +50,7 @@
 		}
 
 		#form-title{
-			color: black;
-			
+			color: #e4e4e4;
 		}
 
 		.login_btn {

@@ -17,7 +17,7 @@ from jsonschema import ValidationError
 # Create your views here.
 
 from .forms import *
-from .models import Book,Student,IssueBook,BookCodes
+from .models import Book, HistoryBook,Student,IssueBook,BookCodes
 from . import models
 from .filters import StudentFilter,BookFilter
 from .decorators import unauthenticated_user,allowed_users,admin_only
@@ -66,7 +66,7 @@ def addStudent(request):
 @login_required(login_url='login')
 @admin_only
 def home(request):
-     return render(request, 'library/home.html')
+    return render(request, 'library/home.html')
 
 #show all books
 
@@ -217,6 +217,10 @@ def bookIssue(request, pk):
            # print(ids)
            # print(bk)
             form.save()
+            ib=IssueBook.objects.filter(student=student,book=book).first()
+            rn=RatingNotifier(book_to_rate=ib)
+            rn.save()
+            
             messages.success(request,f'book {book} issued successfully to {student}')
             return redirect('/')
 
@@ -234,10 +238,14 @@ def bookReturn(request, pk):
     #print(bookInIssueBook,bookInIssueBook.book.isbn)
     if request.method == 'POST':
         bookInBookCodes=BookCodes.objects.get(isbn=bookInIssueBook.book.isbn)
-        #print(bookInBookCodes)
+        rate_given=bookInIssueBook.ratingnotifier.rating
+        h=HistoryBook(rating=rate_given,book_copy=bookInIssueBook.book,student=bookInIssueBook.student)
+        h.save()
         bookInIssueBook.delete()
         bookInBookCodes.status="Available"
         bookInBookCodes.save()
+        
+
         return redirect('/')
 
     return render(request, 'library/returnbook.html', {'item': bookInIssueBook}) 
@@ -327,6 +335,8 @@ def viewRequestedBook(request,pk_test):
             #create issuebook obj 
             issueObj=IssueBook(book=book,student=student)
             issueObj.save()
+            rn=RatingNotifier(book_to_rate=issueObj)
+            rn.save()
             #deleting request for that book
             #print('request book deletion')
             RequestBook.objects.filter(student=student).filter(book__title=book.book.title).first().delete()
@@ -372,6 +382,46 @@ def updateStudent(request, pk):
     context ={'form': form}
     return render(request, 'library/update_student_form.html', context)
 
+@login_required
+@allowed_users(allowed_roles=['student'])
+def gather_notifications(request):
+    if request.method == 'POST':
+        id=request.POST.get('id')
+        return redirect('rate_book',id)
+    book_issued = request.user.student.issuebook_set.filter(ratingnotifier__has_rated=False)
+    context={
+        'issued':book_issued
+    }
+    return render(request,'library/notifications_form.html',context=context)
+
+@login_required
+@allowed_users(allowed_roles=['student'])
+def rate_book(request,pk):
+    book_to_rate=IssueBook.objects.get(id=pk)
+    stud_of_book=book_to_rate.student
+    if(request.user.student!=stud_of_book):
+        return HttpResponse("Page doesn't exist")
+    elif(book_to_rate.ratingnotifier.has_rated==True):
+        return HttpResponse("you already rated")
+    else:
+        context={
+            'title':book_to_rate.book.book.title
+        }
+        if(request.method=='POST'):
+            rating=request.POST.get('rating')
+            rn=RatingNotifier.objects.get(book_to_rate=book_to_rate)
+            rn.rating=rating
+            rn.has_rated=True
+            rn.save()
+            file=open("ratings_data\\rating.csv", "a")
+            file.write(f'{book_to_rate.book.book.title},{book_to_rate.book.isbn},{request.user.student.prn_no},{rn.rating}\n')
+            print("writen")
+            file.close()
+            return redirect('user-page')
+
+        form=RatingForm()
+        context['form']=form
+    return render(request,'library/rating_template.html',context=context)
 
 #Delete Student
 @login_required(login_url='login')

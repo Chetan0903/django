@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-
+{% load checkAdmin %}
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -49,17 +49,28 @@
 
         <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
             <div class="navbar-nav">
-              <li class="nav-item active"></li>
+              <li class="nav-item active">
                 <a href="/" class="nav-item nav-link active">Home</a>
               </li>
-                <li class="nav-item active">
+              <li class="nav-item active">
                 <a href="{% url 'viewbook' %}" class="nav-item nav-link active">Books</a>
               </li>
                 {% if request.user.is_staff %}
-                <li class="nav-item active"></li>
-                <a href="{% url 'viewstudent' %}" class="nav-item nav-link active">Students</a>
-              </li>
+                  <li class="nav-item active">
+                    <a href="{% url 'viewstudent' %}" class="nav-item nav-link active">Students</a>
+                  </li>
                 {% endif %}
+                {% if not request.user|isAdmin %}
+                  <li class="nav-item active">
+                    <a href="{% url 'all_notifications' %}" class="nav-item nav-link active">
+                      Notifications
+                      {% block badge %}
+
+                      {% endblock badge %}
+                    </a>
+                  </li>
+                {% endif %}
+                
                 <!--for book dropdown button
                 <div class="nav-item dropdown">
                   <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Book</a>
