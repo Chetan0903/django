@@ -13,7 +13,7 @@ from django.contrib.auth.models import Group
 from django.db.models import Count
 from jsonschema import ValidationError
 
-
+from django.core.mail import send_mail
 # Create your views here.
 
 from .forms import *
@@ -437,3 +437,26 @@ def deleteStudent(request, pk):
 
     return render(request, 'library/deletestudent.html', context)     
 
+
+def sendmail(request):
+     
+    student = Student.objects.all()
+    for stud in student:
+        book_issued = stud.issuebook_set.all()
+        for ib in book_issued:
+            book = ib.book.book.title
+            print(book)
+            days=(datetime.now(timezone.utc)-ib.issue_date)
+            d=days.days
+            #li=[]
+            if d>14:
+                #li.append(book)
+                send_mail(
+                'DUE BOOKS',
+                f'Dear Student, check the deadlines and kindly return the due books {book}.',
+                'dyplibrary10@gmail.com',
+                [stud.user.email],
+                fail_silently=False,
+                )
+    #return render(request, 'library/home.html')
+    return HttpResponse("Done")
