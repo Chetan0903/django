@@ -27,4 +27,8 @@ urlpatterns = [
     path('deletebook/<str:pk>/', views.deleteBook, name="deletebook"),
 
     path('sendmail/', views.sendmail, name="sendmail"),
+    # report generation
+    path('reports_home/',views.report_generation,name="report_home"),
+    path('reports_home/student_form/',views.report_studentwise,name="report_student_form"),
+    path('display_report/<str:prn>',views.display_student_wise_data,name="show_student_report")
 ]

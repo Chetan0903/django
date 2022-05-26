@@ -460,3 +460,40 @@ def sendmail(request):
                 )
     #return render(request, 'library/home.html')
     return HttpResponse("Done")
+
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
+def report_generation(request):
+    return render(request,'library/report_home.html')
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
+def report_studentwise(request):
+    if request.method == 'POST':
+        print("post")
+        prn=request.POST.get('prn')
+        print(prn)
+        try:
+            student=Student.objects.get(prn_no=prn)
+            return redirect('show_student_report',student.prn_no)
+        except Student.DoesNotExist:
+            return HttpResponse("PRN not found")
+    else:
+        print("get")
+    return render(request,'library/report_student_wise_form.html')
+
+@login_required(login_url='login')
+@allowed_users(allowed_roles=['admin'])
+def display_student_wise_data(request,prn):
+    student=Student.objects.get(prn_no=prn)
+    historyb=HistoryBook.objects.filter(student=student)
+    issueb=IssueBook.objects.filter(student=student)
+    requestb=RequestBook.objects.filter(student=student)
+    context={
+        'student':student,
+        'historyb':historyb,
+        'issueb':issueb,
+        'requestb':requestb
+    }
+    return render(request,'library/display_student_report.html',context)

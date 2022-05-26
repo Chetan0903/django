@@ -1,0 +1,104 @@
+{% extends 'library/main.html' %} 
+
+{% block content %}
+
+
+<h3 class="p-3 mb-2 bg-primary text-white" style = 'font-size: 50px;text-align:center;' ></h3>
+<div class="row">
+	<div class="col-md">
+
+<br>
+
+<div class="row">
+	<div style="margin:30px;width:100vw;text-align:center;">
+        <h5>Student Details:</h5>
+        <b>Student Name:</b> {{student.name}}<br/>
+        <b>Student Username:</b> {{student.user.username}}<br/>
+        <b>Student Department:</b> {{student.branch}}<br/>
+        <b>Student Contact No:</b> {{student.contact_no}}<br/>
+        <button class="btn btn-primary" onclick="window.print();return false;">Print</button>
+    </div>
+    <!-- history book -->
+	<table class="table table-sm" style="width:80%;margin: 0px auto;">
+        {% if historyb %}
+        <tr>
+            <th style="text-align: center;" colspan="2">Returned Book</th>
+        </tr>
+            <thead class="thead-dark">
+                <tr>
+                    <th>Book Name</th>
+                    <th>ISBN</th>
+                </tr>
+            </thead>
+            {% for book in historyb %}
+            <tr>
+                <td>{{book.book_copy.book.title}}</td>
+                <td>{{book.book_copy.isbn}}</td>
+            </tr>
+            {% endfor %}
+        {% else %}
+        <thead class="thead-light">
+            <tr style="text-align:center">
+                <th>No returned book present at this time</th>
+                <th></th>
+            </tr>
+        </thead>
+        {% endif %}
+    </table>
+    <!-- requested book -->
+    <table class="table table-sm" style="width:80%;margin: 0px auto;">
+        {% if requestb %}
+        <tr>
+            <th style="text-align: center;" colspan="2">Requested Book</th>
+        </tr>
+            <thead class="thead-dark">
+                <tr>
+                    <th>Book Name</th>
+                    <th>ISBN</th>
+                </tr>
+            </thead>
+            {% for book in requestb %}
+            <tr>
+                <td>{{book.book_copy.book.title}}</td>
+                <td>{{book.book_copy.isbn}}</td>
+            </tr>
+            {% endfor %}
+        {% else %}
+        <thead class="thead-light">
+            <tr style="text-align:center">
+                <th>No requested book present at this time</th>
+                <th></th>
+            </tr>
+        </thead>
+        {% endif %}
+    </table>
+    <!-- issued book -->
+    <table class="table table-sm" style="width:80%;margin: 0px auto;">
+        {% if issueb %}
+        <tr>
+            <th style="text-align: center;" colspan="2">Issued Book</th>
+        </tr>
+            <thead class="thead-dark">
+                <tr>
+                    <th>Book Name</th>
+                    <th>ISBN</th>
+                </tr>
+            </thead>
+            {% for book in issueb %}
+            <tr>
+                <td>{{book.book_copy.book.title}}</td>
+                <td>{{book.book_copy.isbn}}</td>
+            </tr>
+            {% endfor %}
+        {% else %}
+        <thead class="thead-light">
+            <tr style="text-align:center">
+                <th>No issued book present at this time</th>
+                <th></th>
+            </tr>
+        </thead>
+        {% endif %}
+    </table>  
+
+</div>
+{% endblock %}
