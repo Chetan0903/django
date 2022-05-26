@@ -4,6 +4,8 @@ from . import views
 urlpatterns = [
 
     path('', views.home, name="home"),
+    path('notifications', views.gather_notifications, name="all_notifications"),
+    path('rate_book/<int:pk>', views.rate_book, name="rate_book"),
     path('viewbook/', views.viewbook, name="viewbook"),
     path('viewstudent/', views.viewstudent, name="viewstudent"),
     path('studentdetails/<str:pk_test>/', views.studentDetails, name="studentdetails"),
@@ -23,4 +25,10 @@ urlpatterns = [
 
     path('updatebook/<str:pk>/', views.updateBook, name="updatebook"),
     path('deletebook/<str:pk>/', views.deleteBook, name="deletebook"),
+
+    path('sendmail/', views.sendmail, name="sendmail"),
+    # report generation
+    path('reports_home/',views.report_generation,name="report_home"),
+    path('reports_home/student_form/',views.report_studentwise,name="report_student_form"),
+    path('display_report/<str:prn>',views.display_student_wise_data,name="show_student_report")
 ]

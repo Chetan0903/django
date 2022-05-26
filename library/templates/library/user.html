@@ -1,87 +1,100 @@
 {%  extends 'library/main.html' %}
 
+{% block badge %}
+	<span class="badge badge-light">{{not_rated_yet}}</span>
+{% endblock badge %}
+
 {% block content %}
 
 	<br>
     <h3 class="p-3 mb-2 bg-primary text-white" style = 'font-size: 50px;text-align:center;'></h3>
-<div class="row">
-	<div class="col-md">
-		<div class="card card-body">
-			<h5>Student:</h5>
-			<hr>
-			<a class="btn btn-outline-info  btn-sm btn-block" href="{% url 'updatestudent' request.user.student.id %}">Update Student</a>
-			<a class="btn btn-outline-info  btn-sm btn-block" href="{% url 'viewbook' %}">Search Book</a>
-			<a class="btn btn-outline-info  btn-sm btn-block" href="{% url 'studentRequested' request.user.student.id %}">Requested Books</a>
+	<div class="row">
+		<div class="col-md">
+			<div class="card card-body">
+				<h5>Student:</h5>
+				<hr>
+				<a class="btn btn-outline-info  btn-sm btn-block" href="{% url 'updatestudent' request.user.student.id %}">Update Student</a>
+				<a class="btn btn-outline-info  btn-sm btn-block" href="{% url 'viewbook' %}">Search Book</a>
+				<a class="btn btn-outline-info  btn-sm btn-block" href="{% url 'studentRequested' request.user.student.id %}">Requested Books</a>
+			</div>
+		</div>
+	
+		<div class="col-md">
+			<div class="card card-body">
+				<h5>Student Information</h5>
+				<hr>
+				<p>Name: {{request.user.student.name}} </p>
+				<p>PRN: {{request.user.student.prn_no}} </p>
+				<p>Branch: {{request.user.student.branch}} </p>
+				<p>Email: {{request.user.email}} </p>
+				<p>Phone: {{request.user.student.contact_no}} </p>
+			</div>
+		</div>
+	
+		<div class="col-md">
+			<div class="card card-body">
+				<h5>Total Books</h5>
+				<hr>
+				<h1 style="text-align: center;padding: 10px">{{book_count}}</h1>
+			</div>
 		</div>
 	</div>
 
-	<div class="col-md">
-		<div class="card card-body">
-			<h5>Student Information</h5>
-            <hr>
-            <p>Name: {{request.user.student.name}} </p>
-            <p>PRN: {{request.user.student.prn_no}} </p>
-            <p>Branch: {{request.user.student.branch}} </p>
-			<p>Email: {{request.user.email}} </p>
-			<p>Phone: {{request.user.student.contact_no}} </p>
-		</div>
-	</div>
-
-	<div class="col-md">
-		<div class="card card-body">
-			<h5>Total Books</h5>
-			<hr>
-			<h1 style="text-align: center;padding: 10px">{{book_count}}</h1>
-		</div>
-	</div>
-</div>
-
-
-<br>
 <div class="row">
 	<div class="col">
 		<div class="card card-body">
 			<form method="get">
-
-		    <h3>ISSUED BOOKS</h3>
+				<h3 style="text-align:center">ISSUED BOOKS</h3>
 		  </form>
 		</div>
 	</div>
-	
 </div>
 <br>
-
 <div class="row">
 	<div class="col-md">
 		<div class="card card-body">
 			<table class="table table-sm">
 				<tr>
-                    <th>Book</th>
-                    <th>ISBN</th>
+					<th>Book</th>
+					<th>ISBN</th>
 					<th>Domain</th>
 					<th>Date Issued</th>
 					<th>Return Date</th>
 					<th>Fine</th>
-					
 				</tr>
-
-				{% for t in li2 %}
-				 
+					{% for t in li2 %}
 				<tr>
 					<td>{{t.0}}</td>
 					<td>{{t.1}}</td>
 					<td>{{t.2}}</td>
-                    <td>{{t.3}}</td>
+					<td>{{t.3}}</td>
 					<td>{{t.4}}</td>
 					<td>{{t.5}}</td>
-					
-					
 				</tr>
-
 				{% endfor %}
-				
-
 			</table>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col">
+		<div class="card card-body" style="margin:100px;">
+			<form method="get">
+			<h3 style="text-align:center">Recommended for you</h3>
+			<table class="table table-sm">
+					<tr>
+						<th>Book</th>
+						<th>Author</th>
+					</tr>
+					{% for t in recommended %}
+						<tr>
+							<td>{{t.title}}</td>
+							<td>{{t.author}}</td>
+						</tr>
+					{% endfor %}
+			</table>
+		  </form>
 		</div>
 	</div>
 </div>

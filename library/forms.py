@@ -2,7 +2,7 @@ from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
-from .models import IssueBook,Book, RequestBook,Student,BookCodes
+from .models import IssueBook,Book, RequestBook,Student,BookCodes,RatingNotifier
 from library.models import Student
 
 
@@ -58,4 +58,7 @@ class CreateUserForm(UserCreationForm):
         model = User
         fields = ['first_name','last_name','username', 'email', 'password1', 'password2']
 		
-		
+class RatingForm(ModelForm):
+    class Meta:
+        model = RatingNotifier
+        fields = ['rating']
